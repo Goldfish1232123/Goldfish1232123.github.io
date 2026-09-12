@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-GET · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-GET</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-12">2026-09-12</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+          <span class="tag">Web</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> GET</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>F12 打开开发者工具，展开所有代码。</li>
+          <li>把这串 PHP 代码喂给 DeepSeek 进行分析。</li>
+        </ol>
+        
+        <pre><code>$what = $_GET['what']; // 意思是：浏览器网址栏里如果有“?what=... ”这个参数，就把它取出来
+echo $what; // 把取到的内容显示在页面上
+if($what == 'flag') // 如果取到的内容刚好等于“flag”这个词
+  echo 'flag***'; // 就把真正的 Flag 打印出来</code></pre>
+
+        <ol start="3">
+          <li>了解到这其实是服务器端的 PHP 代码，意思是在 URL 后面加上 <code>?what=flag</code> 就可以让网页显示 flag 了。</li>
+          <li>在地址栏输入后，成功显示 flag。</li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <p><code>$_GET</code> 是一种让网页接收指令的方式。这道题相当于服务器在问：“有没有给我发 what？”“如果你发了 flag，我就把 flag 给你”。</p>
+
+        <h2>🎁 获得奖励</h2>
+        <p>1 金币 15 积分</p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
