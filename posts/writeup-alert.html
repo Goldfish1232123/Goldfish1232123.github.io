@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-alert · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-alert</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-12">2026-09-12</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+          <span class="tag">Web</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> alert</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>F12 打开开发者工具，展开所有代码。</li>
+          <li>发现一行看起来很奇怪的代码。</li>
+          <li>与舍友讨论，猜测可能是 ASCII 码。</li>
+          <li>解码后成功获得 flag。</li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <p>经查询后得知，ASCII 码是让使用不同程序计算机互相传输数据的一种标准码，它主要显示现代英语和其他西欧语言，是最通用的信息交换标准，迄今为止定义了 128 个字符。</p>
+
+        <!-- 💡 提示：此处放你 Word 里提到的 ASCII 表。你可以用截图上传，或者直接粘贴 HTML 表格。如果是截图，用下面这行替换掉“表格图片占位”即可： -->
+        <!-- <img src="图片链接" alt="ASCII表"> -->
+        <p style="text-align:center; color:#999;"><em>（此处可以放一张 ASCII 码表截图）</em></p>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
