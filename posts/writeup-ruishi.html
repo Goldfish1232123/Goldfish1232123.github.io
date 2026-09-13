@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-瑞士军刀 · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-瑞士军刀</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-13">2026-09-13</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> 瑞士军刀</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>启动场景后，发现是 <code>nc</code> 加一串数字，喂给 DeepSeek 后了解到这是 IP 和端口号。</li>
+          <li>下载 netcat 工具。</li>
+          <li>尝试用 nc 连接靶机，但是不知道发送什么来获取 flag。</li>
+          <li>经过观察发现，题目详情里作者提示了 <code>ls</code>，可能是要发这个？<br>
+              <code>D:\netcat>ncat 160.202.254.160 18893</code><br>
+              <code>ls: not found</code></li>
+          <li>发过去找不着，经过查询后得知，<code>ls</code> 是 Linux 系统用来“列出当前文件目录”的命令，而我用 Windows 系统直接给他发这个显然是不行的。</li>
+          <li>想到解决方案，通过在本地运行 Python 脚本的方式给它发送内容，并且读取 flag。</li>
+        </ol>
+
+        <!-- 📸 图片 1：Python 脚本截图（第一张） -->
+        <img src="swiss-python-1.png" alt="Python脚本截图1" style="max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0;">
+        <p style="text-align:center; color:#999; font-size:13px;"><em>Python 脚本代码（上）</em></p>
+
+        <!-- 📸 图片 2：Python 脚本截图（第二张） -->
+        <img src="swiss-python-2.png" alt="Python脚本截图2" style="max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0;">
+        <p style="text-align:center; color:#999; font-size:13px;"><em>Python 脚本代码（下）</em></p>
+
+        <ol start="7">
+          <li>使用 DeepSeek 写的脚本成功看到文件目录，读取 flag 脚本，成功得到 flag。</li>
+        </ol>
+
+        <h2>📝 终端输出日志</h2>
+        <pre><code>1s : not found
+dir : not found
+ls : not found
+python solve.py
+sh: 4: python: not found
+^C
+D:\netcat>python solve.py
+[*] 正在连接靶机
+[*] 发送 'ls' 命令查看文件...
+bin dev flag lib lib32 lib64 pwn1
+[*] 尝试读取 flag...
+flag[9e861196d5a73bcd]
+cat: flag.txt: No such file or directory
+按回车键退出...</code></pre>
+
+        <h2>⚠️ 踩过的坑</h2>
+        <ol>
+          <li>下东西的时候记得关火绒（我的 netcat 被火绒杀了）。</li>
+          <li>跨平台不兼容：Windows 的换行符与 Linux 的冲突，导致 netcat 发送的 Linux 命令一直报错。</li>
+          <li>执行环境混淆：一开始没分清 Python 脚本是在自己的电脑运行，还是在靶机运行。</li>
+        </ol>
+
+        <h2>📚 学到的新知识</h2>
+        <ul>
+          <li><code>nc</code> 是可以建立 TCP 连接的强大工具。</li>
+          <li>Linux 命令：<code>ls</code>（查看目录）、<code>cat</code>（查看文件）。</li>
+          <li>Python 脚本可以作为网络工具的安全替代品，绕过本地环境限制。</li>
+        </ul>
+
+        <h2>🎁 获得奖励</h2>
+        <p>1 金币 10 积分</p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
