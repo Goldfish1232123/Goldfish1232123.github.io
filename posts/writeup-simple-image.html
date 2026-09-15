@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-这是一张单纯的图片 · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-这是一张单纯的图片</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-15">2026-09-15</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> 这是一张单纯的图片</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>打开题目，发现下载下来一张名为 <code>file</code> 的 jpg 格式图片。（他都叫 file 了，而且他说图片单纯，那他肯定不单纯）</li>
+          <li>尝试改后缀，试了几个，发现 html 格式下，这个文档没提示要修复。</li>
+          <li>改成 html 格式查看，打开之后发现许多乱码，在其中发现有一串字符疑似是之前出现的 ASCII 码。</li>
+        </ol>
+
+        <p>乱码内容如下：</p>
+        <pre><code>胺口g%闲户胶音嫌+口睡？D擎？担询前？口（口巫4m7触拥？[？\~？s肿C 镶"楼[？摊增棵]？？x眠c+？x口m；肤h？？？]床？c@辞[X纸學W口瑾撒L哭 颜K口i"G？c廓兵箕口？懷0Ek口服口（口嫌 供越咨）+口.？_9端Ct愚眠绿？口口 1m没恐e>H？h？H圆3S汁？/趋在璃究^口口？轨？醋作X？"%口？s呱M胸 u口<谚？瞪？Z口？&囊？n？口[嘴口婴脆痱4b F口M？HD口Y额卷口Xu口j>口评？？鉴行口"V？罐oj？ 诚）趟云口嫌奴咋采？磨口sq口1轿斗？魔口S善逻[x口醚N？h？+陆届均T蕙 o？口要？T@口）？陶洁？k？檐？G？ 稠H\\$钵口梁口？？帽k口=稗翰] A啤？口？a口？？价|鲜x揍？毫F？搜NUy口警Q？Xd？口？？？口 内口L？口Jd口？？8A@口罚iV口&？峰g口深C （口G十？~？口（口（口（口？旷7）柳步y霸崛T？口6李W （？燥- 痣Z？始口口皇K口rh口.口斥精晶@？q？？）；口Q口WKx：- 口？</code></pre>
+
+        <ol start="4">
+          <li>喂给 DeepSeek，得到 flag。</li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <p>查看网页源码往往比直接看渲染后的页面更有效。</p>
+
+        <h2>🎁 获得奖励</h2>
+        <p>1 金币 10 积分</p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
