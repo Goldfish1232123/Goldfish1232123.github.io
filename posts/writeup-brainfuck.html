@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-[+-&lt;&gt;] · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-[+-&lt;&gt;]</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-18">2026-09-18</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> [+&lt;&gt;]</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>看描述，发现一堆 <code>[+</code> 符号。</li>
+          <li>询问 DeepSeek，发现这是 Brainfuck 语言。</li>
+          <li>找到 Brainfuck 在线解释器，获得 flag（我用的这个 <a href="https://brainfuck.net/" target="_blank" rel="noopener noreferrer">Brainfuck.net - Interpreter, Encoder &amp; Debugger</a>）。</li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <p>经过查询了解了这种语言的设计。</p>
+
+        <h3>核心设计</h3>
+        <p>Brainfuck 只有 8 个指令，其他字符全部被当作注释忽略：</p>
+        <table style="width:100%; border-collapse: collapse; margin: 10px 0;">
+          <thead>
+            <tr>
+              <th style="border:1px solid #ddd; padding:6px; text-align:left;">指令</th>
+              <th style="border:1px solid #ddd; padding:6px; text-align:left;">含义</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="border:1px solid #ddd; padding:6px;"><code>&gt;</code></td><td style="border:1px solid #ddd; padding:6px;">数据指针右移一格</td></tr>
+            <tr><td style="border:1px solid #ddd; padding:6px;"><code>&lt;</code></td><td style="border:1px solid #ddd; padding:6px;">数据指针左移一格</td></tr>
+            <tr><td style="border:1px solid #ddd; padding:6px;"><code>+</code></td><td style="border:1px solid #ddd; padding:6px;">当前内存单元的值加 1</td></tr>
+            <tr><td style="border:1px solid #ddd; padding:6px;"><code>-</code></td><td style="border:1px solid #ddd; padding:6px;">当前内存单元的值减 1</td></tr>
+            <tr><td style="border:1px solid #ddd; padding:6px;"><code>.</code></td><td style="border:1px solid #ddd; padding:6px;">输出当前内存单元对应的字符</td></tr>
+            <tr><td style="border:1px solid #ddd; padding:6px;"><code>,</code></td><td style="border:1px solid #ddd; padding:6px;">从输入读入一个字符到当前内存单元</td></tr>
+            <tr><td style="border:1px solid #ddd; padding:6px;"><code>[</code></td><td style="border:1px solid #ddd; padding:6px;">如果当前单元为 0，跳到匹配的 <code>]</code> 之后</td></tr>
+            <tr><td style="border:1px solid #ddd; padding:6px;"><code>]</code></td><td style="border:1px solid #ddd; padding:6px;">如果当前单元不为 0，跳回匹配的 <code>[</code> 之后</td></tr>
+          </tbody>
+        </table>
+        <p>这种语言感觉更多是为了好玩，排查要累死。</p>
+
+        <h2>🎁 获得奖励</h2>
+        <p>1 金币 10 积分</p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
