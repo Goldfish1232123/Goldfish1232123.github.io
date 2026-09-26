@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-.!? · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-.!?</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+          <span class="tag">Crypto</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> .!?</li>
+          <li><strong>题目平台：</strong> Bugku CTF（平台题）</li>
+          <li><strong>题目类型：</strong> Crypto / 深奥语言（Short Ook 编码）</li>
+          <li><strong>题目附件：</strong> <code>file.txt</code>，内容是 <code>..... !?!!. ?.... .....</code> 这样的符号串</li>
+          <li><strong>涉及工具：</strong> Python（自己写解码器 + Brainfuck 解释器）</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>打开附件，看到的内容是：
+            <pre><code>..... ..... ..... ..... !?!!. ?.... ..... ..... ..... .?.?! .?... .!...
+..... ..... !.?.. ..... !?!!. ?!!!! !!?.? !.?!! !!!.. ..... ..... .!.?.</code></pre>
+            整个文件只由 <code>.</code>、<code>!</code>、<code>?</code> 三种符号组成——这是 <strong>Ook! 的简写版"Short Ook"</strong>。
+          </li>
+          <li>Ook! 是 Brainfuck 的"换皮语言"：用 <code>Ook.</code> / <code>Ook!</code> / <code>Ook?</code> 两两组合表示 Brainfuck 的 8 条指令。Short Ook 就是把这三种写法简写成 <code>.</code> <code>!</code> <code>?</code>。</li>
+          <li>把三个符号定义成：<code>.</code> = <code>Ook.</code>、<code>!</code> = <code>Ook!</code>、<code>?</code> = <code>Ook?</code>，于是<strong>每两个符号 = 一条 Brainfuck 指令</strong>。下面是<strong>官方对照表</strong>（务必用这份）：
+            <pre><code>.?  -&gt;  &gt;      ?.  -&gt;  &lt;
+..  -&gt;  +      !!  -&gt;  -
+!.  -&gt;  .      .!  -&gt;  ,        （输入指令，本题没用到）
+!?  -&gt;  [      ?!  -&gt;  ]</code></pre>
+          </li>
+          <li>把文件里所有符号提取出来（忽略空格换行）后两两配对，就得到 247 条 Brainfuck 指令：
+            <pre><code>++++++++++[->++++++++++&lt;]&gt;++.++++++.&lt;+++[->---&lt;]&gt;--.++++++.
+&lt;+++[->++++&lt;]&gt;++++.&lt;+++++[->-----&lt;]&gt;.&lt;++...</code></pre>
+          </li>
+          <li>运行这段 Brainfuck（自己写个解释器只要 30 行），输出：
+            <pre><code>flag{bugku_jiami}</code></pre>
+          </li>
+          <li>提交 <code>flag{bugku_jiami}</code>。</li>
+          <li>完整脚本（解码 + 运行）：
+            <pre><code>ook = open("file.txt").read()
+symbols = "".join(c for c in ook if c in ".!?")
+pairs = [symbols[i:i+2] for i in range(0, len(symbols)-1, 2)]
+TABLE = {".?": "&gt;", "?.": "&lt;", "..": "+", "!!": "-",
+         "!.": ".", ".!": ",", "!?": "[", "?!": "]"}
+bf = "".join(TABLE[p] for p in pairs)
+
+tape, ptr, out, pc = [0]*65536, 0, [], 0
+jump, stack = {}, []
+for i, c in enumerate(bf):
+    if c == "[": stack.append(i)
+    elif c == "]":
+        j = stack.pop(); jump[i] = j; jump[j] = i
+while pc &lt; len(bf):
+    c = bf[pc]
+    if c == "&gt;": ptr += 1
+    elif c == "&lt;": ptr -= 1
+    elif c == "+": tape[ptr] = (tape[ptr]+1) &amp; 255
+    elif c == "-": tape[ptr] = (tape[ptr]-1) &amp; 255
+    elif c == ".": out.append(chr(tape[ptr]))
+    elif c == "[" and tape[ptr] == 0: pc = jump[pc]
+    elif c == "]" and tape[ptr] != 0: pc = jump[pc]
+    pc += 1
+print("".join(out))      # flag{bugku_jiami}</code></pre>
+          </li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <h3>这道题的考点</h3>
+        <p>认识"深奥语言"家族里的 <strong>Short Ook / Ook!</strong>，并理解它和 Brainfuck 是<strong>同一套指令、不同的写法</strong>。</p>
+
+        <h3>原理：Ook! 和 Short Ook 到底是什么</h3>
+        <ul>
+          <li>Brainfuck 只有 8 条指令：<code>&gt;</code> <code>&lt;</code> <code>+</code> <code>-</code> <code>.</code> <code>,</code> <code>[</code> <code>]</code>，操作一个指针和一片内存单元。</li>
+          <li>Ook! 把每个指令写成两个"猩猩语"词：例如 <code>Ook. Ook?</code> 就是 <code>&gt;</code>。Short Ook 进一步把 <code>Ook.</code>→<code>.</code>、<code>Ook!</code>→<code>!</code>、<code>Ook?</code>→<code>?</code>，于是每条指令只剩 2 个符号。</li>
+          <li>所以这类题<strong>只要认出符号集 + 找对对照表，就能一路解开</strong>，完全不需要手算。</li>
+        </ul>
+
+        <h3>可复用的思路（下次遇到同类题）</h3>
+        <ol>
+          <li>先统计字符集：只有 <code>.!?</code> → Short Ook；有 <code>Ook.</code> 字样 → 完整 Ook!；只有 <code>+ - &lt; &gt; [ ] . ,</code> → 直接是 Brainfuck；只有空白字符 → Whitespace 语言。</li>
+          <li>把符号两两配对 → 映射成 Brainfuck → 写个解释器（或找在线解释器）运行。</li>
+          <li><strong>验证配对是否正确的小技巧</strong>：如果配对了，出现过的"符号对"种类应该刚好覆盖用到的指令，而且 <code>[</code> 和 <code>]</code> 的数量必须相等。这题解开后正好是 11 个 <code>[</code> 配 11 个 <code>]</code>，可以确认没问题。</li>
+        </ol>
+
+        <h3>延伸知识</h3>
+        <ul>
+          <li>同族语言：Ook!、Short Ook、Brainfuck、Whitespace（只用空格/Tab/换行写代码）。</li>
+          <li>这类题还常和 Base64、Brainfuck 混在一起出（先 Base64 解码得到 Ook，再解 Ook）。</li>
+        </ul>
+
+        <h3>防御视角</h3>
+        <p>与安全机制无关。这道题训练的是"<strong>看到陌生符号集 → 判断类型 → 找对工具</strong>"的反应速度，这在 MISC/Crypto 里比记命令更重要。</p>
+
+        <h3>踩坑提示</h3>
+        <ul>
+          <li><strong>对照表一定要用官方那份</strong>！我一开始用了网上另一种"约定版本"的对照表（把 <code>..</code> 当成 <code>&gt;</code>），结果生成的 Brainfuck 程序运行后输出一堆空字符（<code>\x00</code>），看着完全不像出错，很容易卡住。判断标准：用对的表解出来的程序一开始就是 <code>++++++++++[-&gt;++++++++++&lt;]&gt;++.</code> 这种"攒数字再输出"的经典结构。</li>
+          <li>提取符号时不要漏字符、也不要少配对（总数必须是偶数）。</li>
+        </ul>
+
+        <h2>🎁 获得奖励</h2>
+        <p>1 金币 20 分数</p>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

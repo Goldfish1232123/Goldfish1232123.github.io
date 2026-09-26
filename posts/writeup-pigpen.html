@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-把猪困在猪圈里 · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-把猪困在猪圈里</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+          <span class="tag">Crypto</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> 把猪困在猪圈里</li>
+          <li><strong>题目平台：</strong> Bugku CTF（平台题）</li>
+          <li><strong>题目类型：</strong> Crypto / 古典密码（猪圈密码）</li>
+          <li><strong>题目描述：</strong> flag{}</li>
+          <li><strong>题目附件：</strong> 一个文本文件（内容是一大串 Base64）</li>
+          <li><strong>涉及工具：</strong> Python、猪圈密码对照表（或 hiencode 的在线工具）</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>打开附件，得到的是一大段"乱码"文本。看开头是 <code>/9j/4AAQ</code>——这是 <strong>JPEG 图片的 Base64 编码</strong>特征。</li>
+          <li>把整段文本做 Base64 解码，还原出一张图片：
+            <pre><code>import base64
+open("pig.jpg", "wb").write(base64.b64decode(open("file pig.txt").read()))</code></pre>
+            得到的是一张只有 369×51 的小图，上面排着 <strong>17 个符号</strong>。
+          </li>
+          <li>看符号的样子：由线段和点组成，像"缺边的方框""折角""三角形"——这是 <strong>猪圈密码（Pigpen cipher）</strong>。题目名"把猪困在猪圈里"也直接点明了。</li>
+          <li>按标准猪圈密码对照表去查，一开始完全查不出正常文字。仔细观察后发现问题：<strong>这张图是旋转 180° 的</strong>（符号开口方向全反了）。把符号在脑子里转正再查表就通了。</li>
+          <li>转正后逐个对照（标准表：3×3 网格对应 a-i，带点的网格对应 j-r，X 形网格对应 s-v，带点的 X 形网格对应 w-z），得到 17 个字母：
+            <pre><code>t h i s i s p i g p a s s w o r d
+→ thisispigpassword</code></pre>
+          </li>
+          <li><strong>交叉验证</strong>（很重要，能确认没查错表）：图里正好有 3 个完全相同的"折角"符号（第 3、5、8 个），而解出来的第 3、5、8 位都是 <code>i</code>；有 4 个相同的"倒三角"符号（第 4、6、12、13 个），对应位置全是 <code>s</code>；有 2 个带点的符号（第 7、10 个）都是 <code>p</code>。完全吻合。</li>
+          <li>按题目给的格式套上大括号：<code>flag{thisispigpassword}</code>，提交通过。</li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <h3>这道题的考点</h3>
+        <p>两层：先做 <strong>Base64 → 图片</strong>的转换，再识别并破译 <strong>猪圈密码</strong>。另外还埋了一个"图被旋转了"的坑。</p>
+
+        <h3>原理：猪圈密码是怎么编码的</h3>
+        <ul>
+          <li>猪圈密码（Pigpen / 共济会密码）用一个"井字格"来分配字母：把 26 个字母放进 4 个图形里——
+            <ul>
+              <li>第一个 3×3 网格：a b c / d e f / g h i</li>
+              <li>同样的网格加一个点：j k l / m n o / p q r</li>
+              <li>一个 X 形网格（4 个三角形）：s t u v</li>
+              <li>X 形网格加一个点：w x y z</li>
+            </ul>
+          </li>
+          <li>每个字母的符号，就是它在网格里"所处格子"的边框形状（角、边、三角）。所以符号只有固定的十几种，靠形状+有没有点就能唯一确定字母。</li>
+          <li>因为是"图形替换"，没有任何密钥、也没有数学难度，纯靠对照表；它的历史用途是共济会的秘密通信。</li>
+        </ul>
+
+        <h3>可复用的思路（下次遇到同类题）</h3>
+        <ol>
+          <li>附件是"一段文本"时，先判断是不是编码：<code>/9j/</code> 开头 → Base64 图片；<code>iVBOR</code> 开头 → Base64 PNG；<code>UEsDB</code> → Base64 ZIP。用 Python 的 <code>base64.b64decode</code> 一行还原成文件。</li>
+          <li>还原出的图片里有"几何图案"→ 往古典图形密码方向想：猪圈密码、跳舞小人、银河字母、十二宫密码。</li>
+          <li><strong>查不出结果时，先怀疑图的方向/取景</strong>：旋转 90°/180°、水平镜像都会让符号看起来"似是而非"。可以把图片旋转试试再对照。</li>
+          <li>用"重复符号"交叉验证：相同的符号必然对应相同字母，如果解出来的句子在这一位置恰好重复，说明表用对了。</li>
+          <li>在线工具：<code>hiencode.com/pigpen.html</code>（猪圈密码对照表）、CyberChef 里也有猪圈密码模块，随波逐流的"图片"功能可以直接看图。</li>
+        </ol>
+
+        <h3>延伸知识</h3>
+        <ul>
+          <li>同类图形密码：跳舞小人（Sherlock 里那个）、银河字母（Star Wars）、十二宫杀手密码（黄道十二宫）。</li>
+          <li>Base64 判断小技巧：字符只含 <code>A-Za-z0-9+/</code>、长度是 4 的倍数、常以 <code>=</code> 补齐；而图片的 Base64 往往以 <code>/9j/</code>（JPEG）或 <code>iVBORw0KGgo</code>（PNG）开头。</li>
+        </ul>
+
+        <h3>防御视角</h3>
+        <p>图形替换密码没有密钥空间可言，任何人拿到对照表都能秒解——它只能算"趣味编码"。这也解释了为什么现代密码学强调"算法公开、安全性只依赖密钥"。</p>
+
+        <h3>踩坑提示</h3>
+        <ul>
+          <li>最大的坑就是<strong>图的朝向</strong>：直接用标准表逐个查会觉得"每个符号都差一点"，这时候要想到把图转 180°。</li>
+          <li>Base64 解码时注意去掉文本里的换行/空格，否则解码会失败。</li>
+          <li>解出的明文是全小写字母，flag 要按题目格式加 <code>flag{}</code>。</li>
+        </ul>
+
+        <h2>🎁 获得奖励</h2>
+        <p>2 金币 15 分数</p>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-telnet · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-telnet</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+          <span class="tag">Misc</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> telnet</li>
+          <li><strong>题目平台：</strong> Bugku CTF（平台题）</li>
+          <li><strong>题目类型：</strong> MISC / 流量分析</li>
+          <li><strong>题目描述：</strong> key 格式 <code>flag{xxxxxxxxxxxxxxxxxxxxxxxxxxx}</code></li>
+          <li><strong>题目附件：</strong> <code>networking.pcap</code>（网络抓包文件）</li>
+          <li><strong>涉及工具：</strong> Wireshark（或 Python 手工解析 pcap）</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>解压附件得到一个 <code>networking.pcap</code>——这是网络抓包文件，用 Wireshark 打开（文件头 <code>d4 c3 b2 a1</code> 是经典 pcap 格式的标识）。</li>
+          <li>先看协议统计：里面是 <strong>telnet 会话</strong>（TCP 23 端口）。</li>
+          <li>这里是最关键的一点：<strong>telnet 是明文协议</strong>——它不加密，所有输入（包括密码）都以明文在网络上传输。</li>
+          <li>在 Wireshark 里过滤 <code>tcp.port == 23</code>，右键任意一个包 → <strong>Follow → TCP Stream（追踪 TCP 流）</strong>，就能看到整个会话的完整内容。</li>
+          <li>会话内容是这样的：
+            <pre><code>Ubuntu 12.04.2 LTS
+hockeyinjune-virtual-machine login: ccssaaww
+
+Password: flag{d316759c281bf925d600be698a4973d5}
+
+Login incorrect</code></pre>
+            登录时输入的"密码"其实就是 flag（所以后面提示 Login incorrect 也是正常的）。
+          </li>
+          <li>把 <code>flag{d316759c281bf925d600be698a4973d5}</code> 提交即可。</li>
+          <li>顺便给出<strong>不装 Wireshark 也能解</strong>的 Python 方法（pcap 格式很简单，完全能手工解析）：
+            <pre><code>import struct
+raw = open("networking.pcap", "rb").read()
+off, payloads = 24, []                     # 24 字节全局头
+while off + 16 &lt;= len(raw):
+    _, _, incl, _ = struct.unpack("&lt;IIII", raw[off:off+16])
+    off += 16
+    data = raw[off:off+incl]; off += incl
+    if len(data) &lt; 54: continue
+    if struct.unpack("&gt;H", data[12:14])[0] != 0x0800: continue   # 只要 IPv4
+    ip = data[14:]
+    ihl = (ip[0] &amp; 0x0F) * 4
+    if ip[9] != 6: continue                # 只要 TCP
+    tcp = ip[ihl:]
+    doff = (tcp[12] &gt;&gt; 4) * 4
+    payloads.append(tcp[doff:])
+text = b"".join(payloads)
+import re
+print(re.findall(rb"flag\{[^}]+\}", text))   # [b'flag{d316759c281bf925d600be698a4973d5}']</code></pre>
+          </li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <h3>这道题的考点</h3>
+        <p>流量分析 + 对"<strong>明文协议</strong>"的敏感度。看到 telnet、HTTP、FTP 这些协议，第一反应就该是"里面的内容可以直接读"。</p>
+
+        <h3>原理：为什么 telnet 里的密码能直接看到</h3>
+        <ul>
+          <li>telnet 设计于 1969 年，那时候网络安全还不是问题，所以它<strong>不做任何加密</strong>——你敲的每个字符都原样在网络上传输。</li>
+          <li>抓包工具（Wireshark）只是把经过网卡的字节流记录下来，既然内容没加密，自然就能还原出完整会话。</li>
+          <li>这也是为什么现代运维全部改用 SSH 替代 telnet：SSH 会把整条连接加密，抓包也只能看到密文。</li>
+        </ul>
+
+        <h3>可复用的思路（下次遇到同类题）</h3>
+        <ol>
+          <li>拿到 pcap 先看"协议分级"（Statistics → Protocol Hierarchy），快速判断有哪些协议。</li>
+          <li>如果是 <strong>telnet / HTTP / FTP / SMTP</strong> 这类明文协议 → 直接 Follow TCP Stream 找关键字。</li>
+          <li>找不到就用 <code>Ctrl+F</code> 在 Wireshark 里搜 <code>flag</code>（搜索范围选"分组字节流"）。</li>
+          <li>如果是 HTTPS/TLS 或者加密流量，就要考虑"给了私钥解密"或者"从其他线索还原"。 </li>
+          <li>导出对象的技巧：Wireshark 的 <strong>File → Export Objects</strong> 可以把会话里的文件直接导出。</li>
+        </ol>
+
+        <h3>延伸知识</h3>
+        <ul>
+          <li>常见明文协议：telnet、HTTP、FTP、SMTP、POP3、IMAP、SNMP(v1/v2)。加密版本分别是 SSH、HTTPS、SFTP/FTPS、SMTPS……</li>
+          <li>pcap 文件格式：24 字节全局头 + 每个包 16 字节包头 + 数据（我上面用 Python 手工解析的就是这个结构）。</li>
+        </ul>
+
+        <h3>防御视角</h3>
+        <p>永远不要用 telnet 管理设备；任何涉及口令的协议都必须加密传输。这也是"流量分析"这类题目在真实世界里的对应场景——一旦内网被监听，明文协议等于把密码直接送出去。</p>
+
+        <h3>踩坑提示</h3>
+        <ul>
+          <li>Wireshark 里如果只看到一堆 TCP 包，记得先<strong>右键 → Follow → TCP Stream</strong>，否则很难看出内容。</li>
+          <li>看到 <code>Login incorrect</code> 别以为找错了——很多人会把 flag 当密码输入，输错很正常，重点是那串明文。</li>
+        </ul>
+
+        <h2>🎁 获得奖励</h2>
+        <p>1 金币 10 分数</p>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

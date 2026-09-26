@@ -44,6 +44,72 @@
           <span class="dot" aria-hidden="true">·</span>
           <span class="tag">CTF</span>
         </div>
+        <h3><a href="posts/writeup-telnet-pcap.html">writeup-telnet</a></h3>
+        <p class="excerpt">记录一道流量分析题：telnet 是明文协议，用 Wireshark 追踪 TCP 流就能直接看到登录时输入的 flag，附 Python 手工解析 pcap 的脚本……</p>
+        <a class="read-more" href="posts/writeup-telnet-pcap.html">阅读全文 →</a>
+      </article>
+
+      <article class="post-card">
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+        </div>
+        <h3><a href="posts/writeup-short-ook.html">writeup-.!?</a></h3>
+        <p class="excerpt">记录一道 Short Ook 编码题：把 . ! ? 三种符号两两配对翻译成 Brainfuck 指令，自己写解释器运行得到 flag，含官方对照表与踩坑……</p>
+        <a class="read-more" href="posts/writeup-short-ook.html">阅读全文 →</a>
+      </article>
+
+      <article class="post-card">
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+        </div>
+        <h3><a href="posts/writeup-linux-image.html">writeup-linux</a></h3>
+        <p class="excerpt">记录一道文件系统镜像取证题：14.7MB 的镜像里藏着 flag.txt 和回收站文件，用挂载 / grep -a 两种方式找出 key{...}……</p>
+        <a class="read-more" href="posts/writeup-linux-image.html">阅读全文 →</a>
+      </article>
+
+      <article class="post-card">
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+        </div>
+        <h3><a href="posts/writeup-png-stego.html">writeup-隐写</a></h3>
+        <p class="excerpt">记录一道 PNG 隐写题：IHDR 高度被改且 CRC 被破坏导致图片打不开；修复宽高后发现 flag 藏在完全透明像素的颜色值里……</p>
+        <a class="read-more" href="posts/writeup-png-stego.html">阅读全文 →</a>
+      </article>
+
+      <article class="post-card">
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+        </div>
+        <h3><a href="posts/writeup-babyre.html">writeup-入门逆向</a></h3>
+        <p class="excerpt">记录一道 PE32 逆向入门题：程序只打印一行且 strings 搜不到 flag，最后在汇编里发现 19 条 mov 指令把 flag 逐字节写进栈……</p>
+        <a class="read-more" href="posts/writeup-babyre.html">阅读全文 →</a>
+      </article>
+
+      <article class="post-card">
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+        </div>
+        <h3><a href="posts/writeup-pigpen.html">writeup-把猪困在猪圈里</a></h3>
+        <p class="excerpt">记录一道猪圈密码题：附件是 Base64 图片，图上的 17 个符号需要先把图片旋转 180° 再对照标准表，解出 thisispigpassword……</p>
+        <a class="read-more" href="posts/writeup-pigpen.html">阅读全文 →</a>
+      </article>
+
+      <article class="post-card">
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+        </div>
         <h3><a href="posts/writeup-scattered-cipher.html">writeup-散乱的密文</a></h3>
         <p class="excerpt">记录一道列（行）置换密码题：按纸条上的密钥 2 1 6 5 3 4 把密文每 6 个字符一组重排，还原出被打乱的 flag……</p>
         <a class="read-more" href="posts/writeup-scattered-cipher.html">阅读全文 →</a>
