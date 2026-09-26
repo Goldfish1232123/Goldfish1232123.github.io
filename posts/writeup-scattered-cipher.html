@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-散乱的密文 · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-散乱的密文</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+          <span class="tag">Crypto</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> 散乱的密文</li>
+          <li><strong>题目平台：</strong> Bugku CTF（平台题）</li>
+          <li><strong>题目类型：</strong> Crypto / 古典密码 · 列（行）置换</li>
+          <li><strong>题目描述：</strong> <code>lf5{ag024c483549d7fd@@1}</code>，另有一张纸条上凌乱地写着 <code>2 1 6 5 3 4</code></li>
+          <li><strong>涉及工具：</strong> Python（或在线工具"随波逐流"的行置换解密）</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>先看描述：一串以 <code>lf5{</code> 开头的密文，加上"一张纸条上凌乱的写着 <code>2 1 6 5 3 4</code>"——这串数字显然是<strong>密钥</strong>，而且它正好有 6 位，提示我们把密文<strong>每 6 个字符分一组</strong>。</li>
+          <li>6 个字符一组切分：<code>lf5{ag</code> / <code>024c48</code> / <code>3549d7</code> / <code>fd@@1}</code>，共 4 组。</li>
+          <li>这一类密码叫<strong>行置换（RowsPermutation）</strong>，也就是把每一组里的字符按密钥指定的顺序"打乱"。解密的方向有两种，都要试：
+            <ul>
+              <li>方向 A：明文的第 <code>key[i]</code> 位 = 密文的第 <code>i</code> 位</li>
+              <li>方向 B：明文的第 <code>i</code> 位 = 密文的第 <code>key[i]</code> 位</li>
+            </ul>
+          </li>
+          <li>手工验证方向 A（密钥 <code>2 1 6 5 3 4</code> 变成 0 基下标 <code>1 0 5 4 2 3</code>）：第一组 <code>lf5{ag</code> 还原后是 <code>flag{5</code>——开头就对上了，说明方向 A 正确。</li>
+          <li>把四组都按方向 A 还原：
+            <pre><code>lf5{ag -&gt; flag{5
+024c48 -&gt; 2048c4
+3549d7 -&gt; 53d794
+fd@@1} -&gt; df1}@@</code></pre>
+            拼起来得到 <code>flag{52048c453d794df1}@@</code>。</li>
+          <li>末尾多出来的两个 <code>@@</code> 是<strong>占位填充</strong>（不是 flag 的一部分），去掉后就是最终答案：<code>flag{52048c453d794df1}</code>。</li>
+          <li>用 Python 还原（脚本很短，值得自己敲一遍）：
+            <pre><code>ct = "lf5{ag024c483549d7fd@@1}"
+key = [2, 1, 6, 5, 3, 4]
+idx = [k - 1 for k in key]              # 0 基下标
+groups = [ct[i:i+6] for i in range(0, len(ct), 6)]
+plain = ""
+for g in groups:
+    buf = [""] * 6
+    for i, ch in enumerate(g):
+        buf[idx[i]] = ch                # 方向 A
+    plain += "".join(buf)
+print(plain.replace("@", ""))           # flag{52048c453d794df1}</code></pre>
+          </li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <h3>这道题的考点</h3>
+        <p>古典密码中的<strong>置换类密码</strong>：不改变字符本身，只改变它们在每一组里的<strong>位置</strong>。识别出"密钥是一组数字"是解题的第一步。</p>
+
+        <h3>原理：为什么这样能还原</h3>
+        <ul>
+          <li>加密时，明文被按固定长度（这里是 6）分组，然后按密钥指定的顺序重排组内字符；解密就是把"重排"反过来做一次。</li>
+          <li>密钥 <code>2 1 6 5 3 4</code> 的含义是"第 1 个字符来自明文第 2 位、第 2 个字符来自明文第 1 位……"，所以要把密文第 i 位放回明文的第 key[i] 位。</li>
+          <li>置换只动位置、不动内容，所以字符统计（能看出 <code>flag{}</code>、<code>@</code> 填充）依然是可用的线索。</li>
+        </ul>
+
+        <h3>可复用的思路（下次遇到同类题）</h3>
+        <ol>
+          <li>先数密钥的长度 → 就是分组长度；再确认密文长度能被它整除（不能整除时可能有填充字符）。</li>
+          <li>两种方向都试一遍（正排 / 反排），看哪一种能解出 <code>flag{</code> 开头。</li>
+          <li>用 <code>flag{...}</code> 的格式反推：解出来的结果应该是"有意义的内容 + 可能的填充字符"。</li>
+          <li>填充字符（<code>@</code>、<code>#</code>、空格等）要丢掉再提交。</li>
+        </ol>
+
+        <h3>延伸知识</h3>
+        <ul>
+          <li>同族的古典密码：<strong>栅栏密码</strong>（把明文按栏数分列再按行读）、<strong>列置换密码</strong>（按列打乱）、<strong>凯撒 / 维吉尼亚</strong>（这两个改变的是字符本身）。</li>
+          <li>工具：在线工具"随波逐流"里就有"行置换 RowsPermutation"解密，输入密文和密钥即可；也可以自己写十几行 Python，更能练手感。</li>
+        </ul>
+
+        <h3>防御视角</h3>
+        <p>置换类密码没有任何现代安全性可言——它既不改变字符统计特征，密钥空间也极小（6 个字符的排列最多 720 种，暴力枚举几毫秒就穷尽）。真实场景里必须使用 AES、RSA 这类有密钥管理体系的现代密码。</p>
+
+        <h3>踩坑提示</h3>
+        <ul>
+          <li>末尾的 <code>@@</code> 是填充，不是 flag 内容——提交前必须去掉。</li>
+          <li>方向搞反会解出一堆"看着像但读不通"的字符（例如 <code>flga5{20844c537d49df}1@@</code>），这时把方向反过来再试。</li>
+          <li>分组时不要漏掉符号（<code>{</code>、<code>}</code>、<code>@</code> 都参与置换）。</li>
+        </ul>
+
+        <h2>🎁 获得奖励</h2>
+        <p>1 金币 20 分数</p>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

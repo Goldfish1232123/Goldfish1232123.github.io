@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-贝斯家族 · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-贝斯家族</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+          <span class="tag">Crypto</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> 贝斯家族</li>
+          <li><strong>题目平台：</strong> Bugku CTF（平台题）</li>
+          <li><strong>题目类型：</strong> Crypto / 编码转换（Base 家族）</li>
+          <li><strong>题目描述：</strong> <code>@iH&lt;,{bdR2H;i6*Tm,Wx2izpx2!</code></li>
+          <li><strong>涉及工具：</strong> Python（自己实现 Base91 解码）、CyberChef</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>题目名"<strong>贝斯</strong>家族"就是 <strong>Base 家族</strong>的谐音，提示这是一道 Base 系列编码题。</li>
+          <li>但明显不是 Base64：这串字符里有 <code>@ &lt; , { ; * !</code>，而 Base64 的字符集只有 <code>A-Z a-z 0-9 + /</code>。</li>
+          <li>Base 家族里允许出现大量符号的，主要是 <strong>Base85（Ascii85）</strong>、<strong>Base91</strong>、<strong>Base92</strong>。因为题目叫"贝斯<strong>家族</strong>"，先把几个都试一遍。</li>
+          <li>Base91 解码后直接得到 flag：
+            <pre><code>输入: @iH&lt;,{bdR2H;i6*Tm,Wx2izpx2!
+输出: flag{554a5058c9021c76}</code></pre>
+          </li>
+          <li>Base91 的解码实现（标准码表共 91 个字符，每 13 或 14 位输出若干字节）：
+            <pre><code>B91 = ('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+       '!#$%&amp;()*+,./:;&lt;=&gt;?@[]^_`{|}~"')
+
+def b91decode(s):
+    out = bytearray(); b = n = 0; v = -1
+    for ch in s:
+        i = B91.find(ch)
+        if i &lt; 0:
+            continue
+        if v &lt; 0:
+            v = i
+        else:
+            v += i * 91
+            b |= v &lt;&lt; n
+            n += 13 if (v &amp; 8191) &gt; 88 else 14
+            while n &gt; 7:
+                out.append(b &amp; 255); b &gt;&gt;= 8; n -= 8
+            v = -1
+    if v + 1:
+        out.append((b | v &lt;&lt; n) &amp; 255)
+    return bytes(out)
+
+print(b91decode("@iH&lt;,{bdR2H;i6*Tm,Wx2izpx2!").decode())
+# flag{554a5058c9021c76}</code></pre>
+          </li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <h3>这道题的考点</h3>
+        <p>通过<strong>字符集</strong>判断这是 Base 家族的哪一种编码。Base64/32/85/91/92 的区分点，就在"允许出现哪些字符"和"长度规律"上。</p>
+
+        <h3>原理：Base91 为什么要用 91 个符号</h3>
+        <ul>
+          <li>Base64 用 6 位表示一个"字符"，所以需要 2⁶=64 个符号；Base85 用 85 个符号，每 4 字节编码成 5 个字符，比 Base64 更省空间（这也是 PDF 里用 Ascii85 的原因）。</li>
+          <li>Base91 用 91 个符号，每个字符能承载 <code>log2(91)≈6.5</code> 位信息，因此它的实现里会出现"<strong>13 位或 14 位</strong>"的分组——这正是上面代码中 <code>13 if (v &amp; 8191) &gt; 88 else 14</code> 那行的含义。</li>
+          <li>因为它把 <code>!</code> <code>@</code> <code>&lt;</code> <code>,</code> <code>{</code> <code>;</code> 这些符号都纳入了字母表，所以密文里出现大量符号，和 Base64 的"干净"长相形成鲜明对比。</li>
+        </ul>
+
+        <h3>可复用的思路（下次遇到同类题）</h3>
+        <ol>
+          <li>先看字符集：
+            <ul>
+              <li>只有 <code>A-Za-z0-9+/</code>、可能以 <code>=</code> 结尾 → <strong>Base64</strong></li>
+              <li>全大写 + 数字 2-7、以 <code>=</code> 补齐 → <strong>Base32</strong></li>
+              <li>出现大量 <code>!#$%&amp;()*+,-./:;&lt;=&gt;?@[]^_`{|}~</code> 符号 → <strong>Base85/91/92</strong></li>
+            </ul>
+          </li>
+          <li>再看长度规律：Base64 长度是 4 的倍数；Base32 是 8 的倍数；Base85/91 没有明显倍数关系。</li>
+          <li>把 Base85、Base91、Base92 依次试一遍（CyberChef 里都有现成模块），能解出可读文本的那个就是答案。</li>
+        </ol>
+
+        <h3>延伸知识</h3>
+        <ul>
+          <li>Base 家族的共同点：都是"用一组可打印字符表示二进制数据"，区别只在符号数量和分组方式。</li>
+          <li>安全场景里 Base64 很常见（传输二进制、JWT 的一部分）；但它是<strong>编码</strong>不是加密，任何人拿到都能还原——Web 题里常靠这一点做"信息泄露"。</li>
+        </ul>
+
+        <h3>防御视角</h3>
+        <p>不要把 Base64 当作"加密"用于保护敏感数据（JWT 的 payload 只是 Base64，不是密文）；真正需要保密时必须加密并做好密钥管理。</p>
+
+        <h3>踩坑提示</h3>
+        <ul>
+          <li>Base91 的码表在不同的实现里可能忽略个别符号（例如末尾的双引号），如果自己写解码器解不出来，换用在线工具再验证一次。</li>
+          <li>复制密文时别漏掉符号——Base 题里少一个字符就全解不出来。</li>
+        </ul>
+
+        <h2>🎁 获得奖励</h2>
+        <p>1 金币 30 分数</p>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

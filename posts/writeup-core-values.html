@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-富强民主 · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-富强民主</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+          <span class="tag">Misc</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> 富强民主</li>
+          <li><strong>题目平台：</strong> Bugku CTF（平台题）</li>
+          <li><strong>题目类型：</strong> MISC / 中文特色编码（社会主义核心价值观编码）</li>
+          <li><strong>题目描述：</strong> 一串由"富强、民主、文明、和谐、自由、平等、公正、法治、爱国、敬业、诚信、友善"组成的编码串（共 94 个字）</li>
+          <li><strong>涉及工具：</strong> Python</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>看到这串"价值观词"反复出现的文本，可以确定是网络上的梗编码——<strong>社会主义核心价值观编码</strong>。</li>
+          <li>把文本按<strong>两个字一个词</strong>切开，一共得到 47 个词（注意：是<strong>奇数</strong>，说明它不是简单地"两个词表示一个字节"）。</li>
+          <li>查这种编码的规则：先把原文转成 UTF-8 字节，再写成<strong>十六进制字符串</strong>；然后每一个 hex 位（取值 0~15）用 1~2 个词表示：
+            <ul>
+              <li>值 <code>0~9</code>：直接用一个词（富强=0、民主=1 … 敬业=9）</li>
+              <li>值 <code>10~15</code>：用两个词，第一个词是<strong>转义标记</strong>——<code>诚信</code>(10) 或 <code>友善</code>(11)，第二个词补足余下的差值</li>
+            </ul>
+            具体对照：<code>诚信+富强=10</code>、<code>诚信+民主=11</code>……<code>诚信+平等=15</code>；<code>友善+自由=10</code>、<code>友善+平等=11</code>……<code>友善+敬业=15</code>。
+          </li>
+          <li>按这个规则把 47 个词还原成 hex 字符串：
+            <pre><code>666c61677b393030323566376662313935393933367d</code></pre>
+          </li>
+          <li>十六进制转 ASCII，得到 flag：<code>flag{90025f7fb1959936}</code>。</li>
+          <li>完整解码脚本（可直接复用）：
+            <pre><code>DIGITS = ['富强','民主','文明','和谐','自由','平等','公正','法治','爱国','敬业','诚信','友善']
+s = "公正公正公正诚信文明公正民主…（题目给的编码串）"
+words = [s[i:i+2] for i in range(0, len(s)-1, 2)]
+idx = [DIGITS.index(w) for w in words]        # 词 -&gt; 0~11
+
+hexs = []
+a = 0
+while a &lt; len(idx):
+    v = idx[a]
+    if v &lt; 10:
+        hexs.append(str(v))                   # 0~9 直接用
+    elif v == 10:                             # 诚信 = 转义 10
+        a += 1; hexs.append(hex(idx[a] + 10)[2:])
+    else:                                     # 友善 = 转义 11
+        a += 1; hexs.append(hex(idx[a] + 6)[2:])
+    a += 1
+
+print(bytes.fromhex("".join(hexs)).decode())
+# flag{90025f7fb1959936}</code></pre>
+          </li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <h3>这道题的考点</h3>
+        <p>识别中文社区特有的"梗编码"，并读懂它<strong>用转义前缀扩展字符集</strong>的设计。这类编码题的关键不是猜，而是找到它的规则。</p>
+
+        <h3>原理：为什么 47 个词是奇数</h3>
+        <ul>
+          <li>这种编码要表达的其实是<strong>十六进制数字</strong>（0~15），但码表只有 12 个词，不够表示 16 种取值。</li>
+          <li>解决办法是引入两个"转义前缀"：<code>诚信</code> 和 <code>友善</code>。看到它们，就知道后面的词要和它组合成 10~15 的大数字；其他词各自表示 0~9。</li>
+          <li>因此"多少词表示一个字节"并不固定——取决于原文的十六进制里出现了多少 10~15 的大数字，这也解释了为什么总词数会是奇数。</li>
+          <li>同一段内容用 <code>诚信</code> 或 <code>友善</code> 开头都能编码（两者是等价的两种转义方式），所以这类编码看起来"多变"，但其实完全可逆。</li>
+        </ul>
+
+        <h3>可复用的思路（下次遇到同类题）</h3>
+        <ol>
+          <li>先把编码单位（这里是"词"）列出来并编号——建立"符号 → 数字"的映射表，是所有编码题的第一步。</li>
+          <li>注意有没有"转义/前缀"设计：一旦发现某些符号只在特定位置成对出现，通常就是转义。</li>
+          <li>先还原成中间层（这题是 hex 字符串），再做最后一步转换（hex → ASCII）。<strong>分层还原</strong>是解多层编码的通用方法。</li>
+          <li>如果自己推不出规则，可以去搜"XX 编码 原理"——这类中文梗编码都有公开的实现，读懂规则后自己写脚本。</li>
+        </ol>
+
+        <h3>延伸知识</h3>
+        <ul>
+          <li>国内 CTF 常见的"中文梗编码"还有：<strong>与佛论禅</strong>、<strong>颜文字编码（AAencode / JSFuck）</strong>、<strong>新佛曰</strong>、<strong>熊曰</strong>等，思路都是"用可读文本承载二进制数据"。</li>
+          <li>识别这类题的方法：看文本是不是由有限的一小组词/符号反复组成，且大概率和题目名有关（这题题目名"富强民主"直接点明了码表）。</li>
+        </ul>
+
+        <h3>防御视角</h3>
+        <p>这些编码只是"换装"，不提供任何机密性——任何人都能按公开规则还原。如果开发中想让数据"看起来不像明文"，用编码是自我安慰；真正的保密必须靠加密算法和密钥管理。</p>
+
+        <h3>踩坑提示</h3>
+        <ul>
+          <li><strong>不能简单地"两个词一组"硬解</strong>——必须先处理 10/11 的转义，否则会解出乱码（我第一次就卡在这里）。</li>
+          <li>切词时要按"每两个字"切，不要按单个汉字处理。</li>
+          <li>还原出的 hex 字符串长度必须是偶数，否则说明中间某处转义处理错了。</li>
+        </ul>
+
+        <h2>🎁 获得奖励</h2>
+        <p>1 金币 15 分数</p>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
