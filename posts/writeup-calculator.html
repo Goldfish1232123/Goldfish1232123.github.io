@@ -54,7 +54,38 @@
         </ol>
 
         <h2>📝 收获</h2>
-        <p>经查询后得知，<code>maxlength</code> 属性定义了用户可以输入的最大字符串长度。</p>
+<h3>这道题的考点</h3>
+<p>前端表单限制（<code>maxlength</code>）不是安全边界，改掉它就能绕过。</p>
+
+<h3>原理：为什么这样能拿到 flag</h3>
+<ul>
+  <li><code>maxlength</code> 是 <strong>HTML 属性</strong>，只作用于浏览器里的那个输入框，限制你"手输"的字符数。</li>
+  <li>它管不了你直接修改网页代码，更管不了你绕过页面直接构造请求发数据。</li>
+  <li>这题后端只判断算术结果对不对，没有独立校验长度，所以前端一改就通了。</li>
+</ul>
+
+<h3>可复用的思路（下次遇到同类题）</h3>
+<ol>
+  <li>F12 → Elements，选中那个输入框，找到 <code>maxlength="1"</code>。</li>
+  <li>双击数字，把它改成 <code>2</code>（或者直接把这个属性整段删掉），回车生效。</li>
+  <li>也可以切到 Console 执行：<code>document.querySelector('input').removeAttribute('maxlength')</code>。</li>
+  <li>更"正规"的手法是用 <strong>Burp Suite 抓包改包</strong>：请求发出去时把参数改成任意长度——前端的任何限制都拦不住你。</li>
+</ol>
+
+<h3>延伸知识</h3>
+<ul>
+  <li>同类的"假限制"还有：<code>required</code>（必填）、<code>pattern</code>（正则）、<code>readonly</code>、<code>disabled</code>、<code>min</code>/<code>max</code>、<code>&lt;input type="number"&gt;</code>、JS 写的校验函数、禁用右键……<strong>全都能绕</strong>。</li>
+  <li>这背后是一条重要原则：<strong>前端只负责体验，后端才负责安全。</strong></li>
+</ul>
+
+<h3>防御视角</h3>
+<p>服务端必须对每个参数做独立校验（长度、类型、范围、业务规则），不能假设"用户是从我的页面提交的"。前端校验只是提升体验、减少无效请求，挡不住攻击者。</p>
+
+<h3>踩坑提示</h3>
+<ul>
+  <li>改完属性后页面如果被 JS 重新渲染，值可能又变回去——这时用控制台删属性，或者直接改包发送。</li>
+  <li>别忘了"改完还要正常提交一次"，确认请求真的发出去了。</li>
+</ul>
 
         <h2>🎁 获得奖励</h2>
         <p>1 金币 10分</p>

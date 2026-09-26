@@ -52,29 +52,52 @@
         </ol>
 
         <h2>📝 收获</h2>
-        <p>经过查询了解了这种语言的设计。</p>
+<h3>这道题的考点</h3>
+<p>识别"深奥语言"（Esoteric Language）并用解释器跑出结果。<strong>这类题考的是"认出来 + 用对工具"，不需要手算。</strong></p>
 
-        <h3>核心设计</h3>
-        <p>Brainfuck 只有 8 个指令，其他字符全部被当作注释忽略：</p>
-        <table style="width:100%; border-collapse: collapse; margin: 10px 0;">
-          <thead>
-            <tr>
-              <th style="border:1px solid #ddd; padding:6px; text-align:left;">指令</th>
-              <th style="border:1px solid #ddd; padding:6px; text-align:left;">含义</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td style="border:1px solid #ddd; padding:6px;"><code>&gt;</code></td><td style="border:1px solid #ddd; padding:6px;">数据指针右移一格</td></tr>
-            <tr><td style="border:1px solid #ddd; padding:6px;"><code>&lt;</code></td><td style="border:1px solid #ddd; padding:6px;">数据指针左移一格</td></tr>
-            <tr><td style="border:1px solid #ddd; padding:6px;"><code>+</code></td><td style="border:1px solid #ddd; padding:6px;">当前内存单元的值加 1</td></tr>
-            <tr><td style="border:1px solid #ddd; padding:6px;"><code>-</code></td><td style="border:1px solid #ddd; padding:6px;">当前内存单元的值减 1</td></tr>
-            <tr><td style="border:1px solid #ddd; padding:6px;"><code>.</code></td><td style="border:1px solid #ddd; padding:6px;">输出当前内存单元对应的字符</td></tr>
-            <tr><td style="border:1px solid #ddd; padding:6px;"><code>,</code></td><td style="border:1px solid #ddd; padding:6px;">从输入读入一个字符到当前内存单元</td></tr>
-            <tr><td style="border:1px solid #ddd; padding:6px;"><code>[</code></td><td style="border:1px solid #ddd; padding:6px;">如果当前单元为 0，跳到匹配的 <code>]</code> 之后</td></tr>
-            <tr><td style="border:1px solid #ddd; padding:6px;"><code>]</code></td><td style="border:1px solid #ddd; padding:6px;">如果当前单元不为 0，跳回匹配的 <code>[</code> 之后</td></tr>
-          </tbody>
-        </table>
-        <p>这种语言感觉更多是为了好玩，排查要累死。</p>
+<h3>原理：为什么喂给解释器就能出 flag</h3>
+<ul>
+  <li>Brainfuck 只有 8 个指令，操作一个数据指针和一片内存单元：</li>
+</ul>
+<table>
+  <thead><tr><th>指令</th><th>含义</th></tr></thead>
+  <tbody>
+    <tr><td><code>&gt;</code></td><td>数据指针右移一格</td></tr>
+    <tr><td><code>&lt;</code></td><td>数据指针左移一格</td></tr>
+    <tr><td><code>+</code></td><td>当前内存单元的值加 1</td></tr>
+    <tr><td><code>-</code></td><td>当前内存单元的值减 1</td></tr>
+    <tr><td><code>.</code></td><td>输出当前内存单元对应的字符</td></tr>
+    <tr><td><code>,</code></td><td>读入一个字符到当前内存单元</td></tr>
+    <tr><td><code>[</code></td><td>当前单元为 0 时，跳到匹配的 <code>]</code> 之后</td></tr>
+    <tr><td><code>]</code></td><td>当前单元不为 0 时，跳回匹配的 <code>[</code> 之后</td></tr>
+  </tbody>
+</table>
+<ul>
+  <li>关键点：<strong>其他所有字符都会被当作注释忽略</strong>。所以程序输出什么完全由这 8 个符号决定，把它原样交给解释器，运行结果就是明文。</li>
+</ul>
+
+<h3>可复用的思路（下次遇到同类题）</h3>
+<ol>
+  <li>先看<strong>字符集</strong>：如果只有 <code>+ - &lt; &gt; [ ] . ,</code>（在网页源码里常被转义成 <code>&amp;lt;</code> <code>&amp;gt;</code>），基本就是 Brainfuck。</li>
+  <li>复制原始内容（注意从<strong>源码</strong>复制，页面渲染可能吃掉字符）。</li>
+  <li>用在线解释器运行（brainfuck.net、dcode.fr），直接读出明文。</li>
+  <li>如果输出乱码，检查是否把 HTML 转义字符也复制进去了（应该还原成 <code>&lt;</code> <code>&gt;</code>）。</li>
+</ol>
+
+<h3>延伸知识</h3>
+<ul>
+  <li>同族语言：<strong>Ook!</strong>（把 8 个指令换成猩猩语 <code>Ook. Ook!</code> 的组合）、Short Ook、<strong>Whitespace</strong>（只用空格、Tab、换行写代码）。</li>
+  <li>它们统称 "esoteric programming language（深奥/猎奇编程语言）"，设计目的多是好玩或者挑战极限，而不是实用。</li>
+</ul>
+
+<h3>防御视角</h3>
+<p>无关安全机制。这类题真正的价值是训练"<strong>看到不认识的符号 → 判断类型 → 找对工具</strong>"的反应速度和工具检索能力。</p>
+
+<h3>踩坑提示</h3>
+<ul>
+  <li>网页里的 <code>&lt;</code> <code>&gt;</code> 会被显示成 <code>&amp;lt;</code> <code>&amp;gt;</code>，复制时要还原，否则解释器报错。</li>
+  <li>不要尝试手动执行——用解释器几秒就出结果。</li>
+</ul>
 
         <h2>🎁 获得奖励</h2>
         <p>1 金币 10 积分</p>

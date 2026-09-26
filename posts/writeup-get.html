@@ -62,7 +62,38 @@ if($what == 'flag') // 如果取到的内容刚好等于“flag”这个词
         </ol>
 
         <h2>📝 收获</h2>
-        <p><code>$_GET</code> 是一种让网页接收指令的方式。这道题相当于服务器在问：“有没有给我发 what？”“如果你发了 flag，我就把 flag 给你”。</p>
+<h3>这道题的考点</h3>
+<p>GET 传参 + 读懂几行 PHP 源码（<code>$_GET</code>）。</p>
+
+<h3>原理：为什么这样能拿到 flag</h3>
+<ul>
+  <li><code>$_GET['what']</code> 的意思是：把网址里 <code>?what=...</code> 这个参数的值取出来。</li>
+  <li>代码逻辑是"如果 <code>$what</code> 等于 <code>flag</code>，就输出真正的 flag"。</li>
+  <li>所以这题根本不涉及攻击——只要<strong>按它期望的方式传参</strong>，服务器自己就把 flag 给你了。</li>
+</ul>
+
+<h3>可复用的思路（下次遇到同类题）</h3>
+<ol>
+  <li>读源码，找出两件事：<strong>参数名</strong>（<code>what</code>）和<strong>期望值</strong>（<code>flag</code>）。</li>
+  <li>在网址后面接上 <code>?what=flag</code>，回车。多个参数用 <code>&amp;</code> 连接，如 <code>?a=1&amp;b=2</code>。</li>
+  <li>如果参数值里有特殊字符，记得做 URL 编码（空格是 <code>%20</code>，<code>&amp;</code> 是 <code>%26</code>）。</li>
+</ol>
+
+<h3>延伸知识</h3>
+<ul>
+  <li>GET 与 POST 的本质区别：GET 把数据放在 URL（会记录在日志、浏览器历史里），POST 放在请求体。</li>
+  <li>PHP 里还有 <code>$_POST</code>、<code>$_REQUEST</code>、<code>$_COOKIE</code>，分别对应不同的输入来源。</li>
+  <li><code>==</code> 与 <code>===</code> 的区别是 CTF 的高频考点：<code>==</code> 是"宽松比较"，<code>"0e123" == "0e456"</code> 会成立，用它可以绕过一些校验。</li>
+</ul>
+
+<h3>防御视角</h3>
+<p>不要让用户输入直接决定敏感逻辑；比较时用 <code>===</code> 严格比较；对参数做白名单校验，而不是"等于某值就执行"。</p>
+
+<h3>踩坑提示</h3>
+<ul>
+  <li>别打成中文问号"？"，必须是英文 <code>?</code>。</li>
+  <li>参数名大小写敏感，<code>What</code> 和 <code>what</code> 不一样。</li>
+</ul>
 
         <h2>🎁 获得奖励</h2>
         <p>1 金币 10 积分</p>

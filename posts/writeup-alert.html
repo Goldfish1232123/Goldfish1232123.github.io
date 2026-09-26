@@ -55,11 +55,41 @@
         <h2>🎁 获得奖励</h2>
         <p>1 金币 10分</p>
         <h2>📝 收获</h2>
-        <p>经查询后得知，ASCII 码是让使用不同程序计算机互相传输数据的一种标准码，它主要显示现代英语和其他西欧语言，是最通用的信息交换标准，迄今为止定义了 128 个字符。</p>
+<h3>这道题的考点</h3>
+<p>ASCII 十进制编码的识别 + 排除弹窗干扰。</p>
 
-        <img src="ascii-table.png" alt="ASCII扩展表" style="max-width: 100%; height: auto; border-radius: 8px; margin-top: 10px;">
+<h3>原理：为什么这串数字就是 flag</h3>
+<ul>
+  <li>ASCII 用数字给字符编号：<code>102</code> 是 <code>f</code>、<code>108</code> 是 <code>l</code>、<code>97</code> 是 <code>a</code>……所以 <code>102 108 97 103</code> 拼起来就是 <code>flag</code>。</li>
+  <li>网页里的 <code>alert()</code> 弹窗只是干扰——让你心烦意乱、点个不停，没时间看源码。</li>
+  <li>把弹窗处理掉、静下来看代码，数字串就藏在那里。</li>
+</ul>
 
-      </div>
+<h3>可复用的思路（下次遇到同类题）</h3>
+<ol>
+  <li>先处理干扰：按 <code>ESC</code> 关弹窗，或勾选"阻止此页面创建更多对话框"，或直接禁用 JavaScript。</li>
+  <li>F12 → Elements，找可疑的数字串（连续的数字、用空格/逗号分隔）。</li>
+  <li>判断是不是 ASCII：每个数字都落在 <strong>32~126</strong> 这个可打印区间，且个数和 flag 长度吻合。</li>
+  <li>解码：Python 一行 <code>print("".join(chr(int(x)) for x in s.split()))</code>，或用 CyberChef 的 "From Decimal"。</li>
+</ol>
+
+<h3>延伸知识</h3>
+<ul>
+  <li>常见的"字符 → 数字/符号"编码：ASCII（十进制 102、十六进制 66）、Hex、Base64、URL 编码（<code>%66</code>）、HTML 实体（<code>&amp;#102;</code>）。</li>
+  <li>看到 <code>&amp;#102;</code> 这种 <code>&amp;#</code> 开头的就知道是 HTML 实体编码，浏览器渲染时会自动变成 <code>f</code>。</li>
+  <li>CyberChef 的 <strong>Magic</strong> 功能可以自动猜编码，但初学阶段建议先自己判断特征，再对照工具结果。</li>
+</ul>
+
+<h3>防御视角</h3>
+<p>与安全机制无关——这题考的是基本功。但"弹窗干扰"这种思路在真实钓鱼页面里也存在（用弹窗掩盖真实操作），所以养成"先排除干扰再分析"的习惯是有价值的。</p>
+
+<h3>踩坑提示</h3>
+<ul>
+  <li>狂点弹窗很浪费时间——ESC 或禁用 JS 一行搞定。</li>
+  <li>确认是十进制还是十六进制再解码，别解出一堆乱码还以为思路错了。</li>
+</ul>
+
+        </div>
     </article>
   </main>
 

@@ -53,12 +53,44 @@
         </ol>
 
         <h2>📝 收获</h2>
-        <p>页面中使用了以下 JavaScript 代码来实现强制刷新：</p>
-        <pre><code>function myrefresh() {
-    window.location.reload();
+<h3>这道题的考点</h3>
+<p>前端反调试：用 JavaScript 制造"无限刷新"干扰你，考察你如何让这段 JS 失效。</p>
+
+<h3>原理：为什么这样能拿到 flag</h3>
+<p>页面里这段代码每 0.5 秒强制刷新一次网页：</p>
+<pre><code>function myrefresh() {
+  window.location.reload();
 }
 setTimeout('myrefresh()', 500);</code></pre>
-        <p>这串代码的含义是每 500ms 就强制刷新一次网页，或许可以通过把 500 改成很大数字的方式来解决。</p>
+<ul>
+  <li><code>setTimeout(函数, 毫秒)</code> 表示"等 500 毫秒后执行这个函数"。</li>
+  <li><code>window.location.reload()</code> 就是刷新页面。刷新后又重新执行这段代码 → <strong>无限循环</strong>。</li>
+  <li>麻烦在于：你在 F12 里改的代码，页面一刷新就被重置了。所以破解的核心是——<strong>让这段 JS 不执行</strong>，或者<strong>让它慢到你有时间操作</strong>。</li>
+</ul>
+
+<h3>可复用的思路（下次遇到同类题）</h3>
+<ol>
+  <li><strong>禁用 JavaScript（我用的是这个）</strong>：F12 → 按 <code>F1</code> 打开设置 → Debugger（调试程序）→ 勾选 <strong>Disable JavaScript</strong>。刷新逻辑直接失效，页面停住。</li>
+  <li><strong>把延时改大</strong>：在 Elements/Sources 里把 <code>500</code> 改成 <code>99999999</code>（约 27 小时），页面就不会频繁刷新了。</li>
+  <li><strong>下断点</strong>：Sources 面板找到那段 JS，在 <code>reload</code> 那行左侧点一下打断点，JS 会暂停执行。</li>
+  <li><strong>清掉定时器</strong>：Console 里执行 <code>clearTimeout(定时器ID)</code>（要先知道 ID，不太方便）。</li>
+</ol>
+
+<h3>延伸知识</h3>
+<ul>
+  <li>前端反调试的常见套路还有：无限 <code>debugger</code> 语句、检测开发者工具是否打开、禁用右键/F12、定时清空控制台。</li>
+  <li><code>setTimeout</code> 只执行一次，<code>setInterval</code> 会一直重复执行——看到"每隔 X 秒"多半是后者或递归调用。</li>
+</ul>
+
+<h3>防御视角</h3>
+<p>前端反调试只能"提高门槛"，不能真正保护数据——攻击者禁用 JS 就全失效了。真正的校验必须在后端完成。这也正是这题最想告诉你的：<strong>前端的一切限制都是可以绕过的</strong>。</p>
+
+<h3>踩坑提示</h3>
+<ul>
+  <li>拍屏虽然能拿到 flag，但效率很低；禁用 JS 优雅得多（这次两种方法我都试过，对比很明显）。</li>
+  <li>禁用 JS 后记得<strong>改回来</strong>，否则其他正常网站也会显示异常。</li>
+</ul>
+
         <h2>再尝试：禁用 JavaScript</h2>
 <p>既然页面是靠 JavaScript 实现无限刷新的，那么直接给它“ban”掉不就好了吗？</p>
 <p><strong>操作步骤：</strong></p>

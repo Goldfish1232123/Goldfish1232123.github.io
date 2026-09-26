@@ -54,7 +54,37 @@
         </ol>
 
         <h2>📝 收获</h2>
-        <p>通过浏览器的抓包功能，可以查看网络请求的响应头信息，有时候 flag 就藏在 Header 里。</p>
+<h3>这道题的考点</h3>
+<p>HTTP <strong>响应头</strong>（Response Header）里的信息泄露——题目名"头等舱"就是"Header"的谐音提示。</p>
+
+<h3>原理：为什么这样能拿到 flag</h3>
+<ul>
+  <li>服务器返回给你的不只有网页正文，还有一组<strong>响应头</strong>：<code>Content-Type</code>、<code>Set-Cookie</code>、<code>Server</code>，以及开发者自定义的字段。</li>
+  <li>响应头不会显示在页面上，所以正文里翻不到东西时，头里往往藏着线索或 flag。</li>
+</ul>
+
+<h3>可复用的思路（下次遇到同类题）</h3>
+<ol>
+  <li>F12 → <strong>Network（网络）</strong> 面板，先按 <code>F5</code> 刷新页面（否则面板是空的）。</li>
+  <li>点列表里第一个请求（通常就是那个网页），在右侧找 <strong>Response Headers（响应头）</strong>。</li>
+  <li>找不到就按 <code>Ctrl + F</code> 在请求详情里搜 <code>flag</code>。</li>
+  <li>用命令行更快：<code>curl -I http://目标地址</code> 直接把响应头打印出来（<code>-v</code> 还能看完整交互过程）。</li>
+</ol>
+
+<h3>延伸知识</h3>
+<ul>
+  <li>常见的"藏东西"位置清单：响应头、<code>Set-Cookie</code>、HTML 注释、<code>robots.txt</code>、<code>sitemap.xml</code>、<code>favicon.ico</code>、报错页面、备份文件。</li>
+  <li>要分清<strong>请求头</strong>（你发给服务器的，如 <code>User-Agent</code>、<code>Referer</code>）和<strong>响应头</strong>（服务器回给你的）——有些题考的是改成特定请求头，比如伪造 <code>X-Forwarded-For</code>。</li>
+</ul>
+
+<h3>防御视角</h3>
+<p>不要把敏感信息放进响应头；生产环境还应隐藏 <code>Server</code>、<code>X-Powered-By</code> 这类暴露中间件版本的字段，减少攻击者信息。</p>
+
+<h3>踩坑提示</h3>
+<ul>
+  <li>Network 面板空白 = 你没刷新页面，历史请求不会自动出现。</li>
+  <li>别只在"请求头"里找答案，flag 通常在"响应头"。</li>
+</ul>
 
         <h2>🎁 获得奖励</h2>
         <p>1 金币 15 积分</p>
