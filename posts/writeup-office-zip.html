@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-眼见非实 · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-眼见非实</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+          <span class="tag">Misc</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> 眼见非实</li>
+          <li><strong>题目平台：</strong> Bugku CTF（平台题）</li>
+          <li><strong>题目类型：</strong> MISC / 文件类型伪装（Office 文档解包）</li>
+          <li><strong>题目描述：</strong> flag{}</li>
+          <li><strong>题目附件：</strong> 一个压缩包，解压后得到 <code>眼见非实.docx</code></li>
+          <li><strong>涉及工具：</strong> 解压工具（7-Zip / Python 的 zipfile）、文本编辑器</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>题目名"<strong>眼见非实</strong>"本身就是提示：你看到的不一定是真的——也就是"扩展名会骗人"。</li>
+          <li>下载得到的是一个压缩包，解压后是一个 <code>眼见非实.docx</code>。</li>
+          <li>双击用 Word 打开——<strong>报错</strong>，提示文件损坏/无法打开。这里就是第一个"眼见非实"：它虽然叫 <code>.docx</code>，但内部结构并不符合 Word 的要求（这个 docx 里的文件被套在了一个 <code>眼见非实/</code> 子目录下，而正常的 docx 所有条目都必须在压缩包根目录，所以 Word 认不出来）。</li>
+          <li>换个思路：<strong>docx 本质上就是一个 zip 包</strong>。用 7-Zip 打开它（或把后缀改成 <code>.zip</code> 再解压），果然解开了一堆 XML：
+            <pre><code>[Content_Types].xml
+_rels/.rels
+docProps/app.xml
+docProps/core.xml
+word/document.xml          ← 正文在这里
+word/styles.xml
+word/theme/theme1.xml
+...</code></pre>
+          </li>
+          <li>有意思的是：解压出来的条目名前都带着一层 <code>眼见非实/</code> 目录，这也印证了刚才 Word 打不开的原因。</li>
+          <li>正文在 <code>word/document.xml</code> 里（它保存着文档的文字内容）。直接搜关键字：
+            <pre><code>grep -r "flag" ./
+# 或
+python -c "import re;print(re.findall(r'flag\{[^}]*\}', open('word/document.xml',encoding='utf-8').read()))"</code></pre>
+          </li>
+          <li>在 <code>word/document.xml</code> 中找到了 flag：
+            <pre><code>flag{F1@g}</code></pre>
+            （注意用了 leet 写法：<code>F1@g</code> = <code>Fl@g</code>，<code>1</code> 代替 <code>l</code>，<code>@</code> 代替 <code>a</code>）
+          </li>
+          <li>提交通过。</li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <h3>这道题的考点</h3>
+        <p>两件事：<strong>文件类型判断不能只看扩展名</strong>，以及<strong>Office 文档（docx/xlsx/pptx）本质是 zip + XML</strong>。</p>
+
+        <h3>原理：为什么把 docx 当 zip 解开就能看到 flag</h3>
+        <ul>
+          <li>Office 2007 之后的所有文档格式（docx、xlsx、pptx）都基于 <strong>OOXML</strong> 标准：一个 zip 压缩包里装着若干 XML 文件。</li>
+          <li>正文纯文本放在 <code>word/document.xml</code>；样式在 <code>styles.xml</code>；文档属性在 <code>docProps/</code>；嵌入对象、图片、宏分别在各自的目录里。</li>
+          <li>所以"读一个 docx"和"读一个 zip"在文件层面是一样的——这也意味着文档里的内容（包括隐藏信息）都可以被直接提取出来。</li>
+          <li>Word 打不开的原因也不是"文件坏了"，而是内部条目路径不规范（多了一层目录），Word 的解析器找不到 <code>[Content_Types].xml</code> 的位置。</li>
+        </ul>
+
+        <h3>可复用的思路（下次遇到同类题）</h3>
+        <ol>
+          <li>拿到任何"打不开/报错"的文件，先用十六进制看<strong>文件头</strong>：<code>50 4B</code> 就是 ZIP（docx/xlsx/pptx/jar/apk 全是它）。</li>
+          <li>看到 ZIP 就解压；解压出 XML 结构（<code>[Content_Types].xml</code>、<code>word/</code>、<code>docProps/</code>）说明是 Office 文档。</li>
+          <li>然后<strong>全文搜关键字</strong>：<code>flag</code>、<code>key</code>、<code>ctf</code>；XML 里标签可能把关键字拆开，最好先去掉标签再搜（<code>re.sub(r"&lt;[^&gt;]+&gt;", "", text)</code>）。</li>
+          <li>同类伪装还有：把 zip 改名成 jpg/png、把 HTML 改名成图片（改回后缀用浏览器打开）、把 exe 改名成 doc 等等。</li>
+          <li>命令行一条龙（Linux/macOS 下最顺手）：
+            <pre><code>file 眼见非实.docx                  # 看真实类型
+unzip 眼见非实.docx -d out          # 当 zip 解压
+grep -ra "flag" out                 # 递归搜关键字</code></pre>
+          </li>
+        </ol>
+
+        <h3>延伸知识</h3>
+        <ul>
+          <li>OOXML 关键文件：<code>[Content_Types].xml</code>（声明各部分的类型）、<code>word/document.xml</code>（正文）、<code>word/_rels/</code>（关系表）、<code>docProps/app.xml</code>（页数、字数等属性）。</li>
+          <li>zip 里的中文文件名：早期的压缩工具用 GBK 编码存文件名，在别的系统上解压就会显示成乱码（我这边看到的 <code>╤█╝√╖╟╩╡.docx</code> 其实就是 <code>眼见非实.docx</code> 被 GBK/UTF-8 混淆的结果）。</li>
+          <li>Office 文档还能藏东西的位置：宏（vbaProject.bin）、嵌入对象（embeddings/）、自定义 XML（customXml/）、文档属性（作者/标题里塞 flag）。</li>
+        </ul>
+
+        <h3>防御视角</h3>
+        <p>两点现实意义：① 服务端做文件上传校验时，<strong>只看扩展名是不够的</strong>（要看文件头/Magic Bytes），否则"图片马"、伪装文档都能上传成功；② Office 文档可以携带宏，来路不明的文档不要随便点"启用内容"。</p>
+
+        <h3>踩坑提示</h3>
+        <ul>
+          <li>Word 报"文件已损坏，无法打开"<strong>不代表文件没用</strong>——它只是不符合 Word 的解析要求，内容还在里面。</li>
+          <li>搜 flag 时如果只搜 <code>flag{</code> 可能搜不到：XML 里文字常被 <code>&lt;w:t&gt;</code> 之类的标签分割，先去掉标签再搜更保险。</li>
+          <li>文件名乱码是编码问题（GBK ↔ UTF-8），别以为是文件异常。</li>
+          <li>这题 flag 是 <code>flag{F1@g}</code>，注意它是 leet 写法，别"顺手纠正"成 <code>flag{Fl@g}</code> 导致提交失败。</li>
+        </ul>
+
+        <h2>🎁 获得奖励</h2>
+        <p>1 金币 10 分数</p>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
