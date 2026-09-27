@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-备份是个好习惯 · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-备份是个好习惯</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+          <span class="tag">Web</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> 备份是个好习惯</li>
+          <li><strong>题目平台：</strong> Bugku CTF（平台题，需启动场景）</li>
+          <li><strong>题目类型：</strong> WEB / 备份文件泄露 + MD5 弱比较 + 过滤器绕过</li>
+          <li><strong>题目描述：</strong> 备份是个好习惯</li>
+          <li><strong>靶机地址：</strong> 启动场景后形如 <code>http://160.202.254.160:16492/</code>（每人不同，会过期）</li>
+          <li><strong>涉及工具：</strong> 浏览器 / curl</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>打开首页，只看到一串十六进制：
+            <pre><code>d41d8cd98f00b204e9800998ecf8427ed41d8cd98f00b204e9800998ecf8427e</code></pre>
+            这其实是 <strong>两个 <code>md5("")</code> 拼在一起</strong>（<code>d41d8cd98f00b204e9800998ecf8427e</code> 就是空字符串的 MD5）。说明后端在读两个变量并输出它们的 MD5，只是我们没传参。
+          </li>
+          <li>题目名"<strong>备份是个好习惯</strong>"就是提示：去找网站留下的备份文件。试常见后缀，<code>/index.php.bak</code> 返回 200：
+            <pre><code>curl http://目标地址/index.php.bak</code></pre>
+          </li>
+          <li>拿到源码（这题的全部难点都在这里）：
+            <pre><code>&lt;?php
+include_once "flag.php";
+ini_set("display_errors", 0);
+$str = strstr($_SERVER['REQUEST_URI'], '?');   // 取问号后面的部分
+$str = substr($str, 1);
+$str = str_replace('key', '', $str);           // 把 "key" 删掉（过滤）
+parse_str($str);                               // 解析成变量
+echo md5($key1);
+echo md5($key2);
+if (md5($key1) == md5($key2) &amp;&amp; $key1 !== $key2) {
+    echo $flag . "取得flag";
+}
+?&gt;</code></pre>
+          </li>
+          <li>读逻辑，目标是三件事同时成立：<code>md5($key1) == md5($key2)</code>、<code>$key1 !== $key2</code>、并且参数名要能躲过 <code>str_replace('key','')</code>。这正好是两类经典姿势：
+            <ul>
+              <li><strong>0e 魔术哈希</strong>：<code>QNKCDZO</code> 与 <code>240610708</code> 的 MD5 分别是 <code>0e830400451993494058024219903391</code> 和 <code>0e462097431906509019562988736854</code>，两个都是 <code>0e</code> 开头，弱比较时被当成数字 0 → 相等 ✓</li>
+              <li><strong>数组绕过</strong>：<code>md5(数组)</code> 在 PHP 5 里会报 warning 并返回 <strong>NULL</strong>，两个 NULL 相比成立；而两个不同的数组 <code>!==</code> 也成立 ✓</li>
+            </ul>
+          </li>
+          <li>还差过滤绕过：参数名里不能出现 "key"。这里利用 <code>str_replace()</code> 的<strong>单次扫描</strong>特性（它不会递归检查替换后的结果）——把参数名写成 <code>kkeyey1</code>：
+            <pre><code>kkeyey1  --删掉中间的"key"-->  k + ey1 = key1   ✓</code></pre>
+            同理 <code>kkeyey2</code> → <code>key2</code>。
+          </li>
+          <li>最终 payload（数组绕过）：
+            <pre><code>http://目标地址/?kkeyey1%5B%5D=a&amp;kkeyey2%5B%5D=b</code></pre>
+            返回：
+            <pre><code>flag{6854e8d776828b0502fefbd2ec2d65f1}取得flag</code></pre>
+          </li>
+          <li>提交 flag，通过。</li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <h3>这道题的考点</h3>
+        <p>三个点叠在一起：<strong>备份文件泄露</strong>（拿到源码）、<strong>MD5 弱比较绕过</strong>（0e 或数组）、<strong>过滤器的单次扫描特性</strong>（<code>str_replace</code> 绕过）。</p>
+
+        <h3>原理：为什么这些"魔术"能成立</h3>
+        <ul>
+          <li><strong>为什么 0e 哈希相等</strong>：PHP 的 <code>==</code> 在比较两个"数字字符串"时会先转成数字。<code>"0e123..."</code> 和 <code>"0e456..."</code> 都被转成 0 → 相等。但注意：它们作为字符串并不相同，所以 <code>!==</code> 成立。</li>
+          <li><strong>为什么数组能绕过</strong>：<code>md5()</code> 期望字符串参数，传入数组时返回 <code>NULL</code>（PHP 5 是 warning，PHP 8 直接抛 TypeError）。<code>NULL == NULL</code> 为真，而两个不同数组严格比较当然不等 —— 两个条件同时满足。</li>
+          <li><strong>为什么 <code>kkeyey1</code> 能变回 <code>key1</code></strong>：<code>str_replace()</code> 从头到尾扫一遍原字符串、删掉匹配的部分，<strong>不会回头再检查新拼出来的内容</strong>。所以 "kkeyey1" 里的 "key"（第 2~4 个字符）被删掉后，剩下的 "k" + "ey1" 恰好拼成 "key1"。</li>
+          <li><code>parse_str()</code> 会把 <code>key1[]=a</code> 解析成数组 <code>$key1 = ['a']</code>，这也是数组绕过的入口。</li>
+        </ul>
+
+        <h3>可复用的思路（下次遇到同类题）</h3>
+        <ol>
+          <li>第一步永远是<strong>找备份/泄露文件</strong>，常用字典：
+            <code>index.php.bak</code>、<code>index.php~</code>、<code>index.php.swp</code>、<code>.index.php.swp</code>、<code>index.php.old</code>、<code>www.zip</code>、<code>wwwroot.zip</code>、<code>web.zip</code>、<code>backup.zip</code>、<code>.git/config</code>、<code>robots.txt</code>……（用 Burp 的 Intruder 或 dirsearch 批量跑更快）</li>
+          <li>拿到源码后，重点找三类逻辑：<strong>比较</strong>（<code>==</code>）、<strong>过滤</strong>（<code>str_replace</code>/<code>preg_replace</code>）、<strong>变量注入</strong>（<code>parse_str</code>、<code>$$var</code>、<code>extract</code>）。</li>
+          <li>看到 <code>md5($a) == md5($b)</code> 就想两招：0e 魔术哈希（<code>QNKCDZO</code>、<code>240610708</code>、<code>aabg7XSs</code>…）或数组。</li>
+          <li>看到 <code>str_replace('x','',...)</code> 这种黑名单，先用<strong>嵌套</strong>思路绕：如过滤 <code>key</code> 就用 <code>kkeyey</code>；过滤 <code>select</code> 就用 <code>selselectect</code>。</li>
+          <li>发包建议用 Burp 或 curl，参数里的特殊字符（<code>[]</code>、<code>%00</code>）要正确编码。</li>
+        </ol>
+
+        <h3>延伸知识</h3>
+        <ul>
+          <li><code>$_SERVER['REQUEST_URI']</code> 是原始请求行里的路径+查询串，和 <code>$_GET</code> 不一样——正因为这里处理的是"原始字符串"，才让 <code>str_replace</code> 这种过滤有了被绕过的空间。</li>
+          <li>同类 md5 考点还有：<code>md5($a, true)</code> 的 raw 输出比较、真正的 MD5 碰撞（两个不同文件同哈希）、SQL 注入里的 <code>md5</code> 弱比较登录绕过。</li>
+          <li>PHP 版本差异要留意：PHP 8 中 <code>md5(数组)</code> 会抛 TypeError（致命错误，页面直接 500），字符串与数字的比较规则也更严格，老 payload 未必通用。</li>
+        </ul>
+
+        <h3>防御视角</h3>
+        <ul>
+          <li><strong>不要把源码、备份、编辑器临时文件放在网站目录里</strong>（<code>.bak</code>/<code>.swp</code>/<code>~</code>/<code>.git</code> 一律要排除），Web 服务器还应拒绝访问这些后缀。</li>
+          <li>比较用 <code>===</code>（例如 <code>hash_equals()</code> 比较哈希），避免弱类型比较被利用。</li>
+          <li>过滤用户输入要用<strong>白名单</strong>而不是黑名单；黑名单永远会被"嵌套写法/编码/大小写"绕过。</li>
+          <li>不要用 <code>parse_str()</code> 把用户可控字符串直接解析进当前作用域（等于把变量覆盖权交给攻击者）。</li>
+        </ul>
+
+        <h3>踩坑提示</h3>
+        <ul>
+          <li><strong>方括号要 URL 编码</strong>：我第一次直接用 <code>?kkeyey1[]=a&amp;kkeyey2[]=b</code>，结果页面一片空白（参数没被正确解析）；改成 <code>%5B%5D</code> 才成功。这类特殊字符建议交给 Burp 或正确编码后再发。</li>
+          <li>页面空白 ≠ payload 错了：PHP 遇到 <code>md5(数组)</code> 这类 warning 时（<code>display_errors=0</code>）不打印内容，要结合逻辑判断。</li>
+          <li>备份文件名的后缀要"多试几个"（<code>.bak</code>/<code>.swp</code>/<code>~</code>/<code>.zip</code>），这题正是靠 <code>index.php.bak</code> 拿到源码的。</li>
+        </ul>
+
+        <h2>🎁 获得奖励</h2>
+        <p>2 金币 20 分数</p>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
