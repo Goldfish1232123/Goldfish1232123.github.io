@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-抄错的字符 · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-抄错的字符</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+          <span class="tag">Crypto</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> 抄错的字符</li>
+          <li><strong>题目平台：</strong> Bugku CTF（平台题）</li>
+          <li><strong>题目类型：</strong> Crypto / 编码识别 + 形近字还原</li>
+          <li><strong>题目描述：</strong> 老师让小明抄写一段话，结果粗心的小明把部分数字抄成了字母，还因为强迫症把所有字母都换成大写。你能帮小明恢复并解开答案吗：<code>QWIHBLGZZXJSXZNVBZW</code></li>
+          <li><strong>涉及工具：</strong> Python（<code>base64</code>）、任意 Base 系列解码网站</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>密文只有大写字母：<code>QWIHBLGZZXJSXZNVBZW</code>（19 个字符）。结合描述可以推出它原本的样子：<strong>包含数字 + 大小写字母混合</strong>，因为"部分数字被抄成了字母"（数字写成了形近的字母）、"所有字母被换成大写"（原来的小写没了）。</li>
+          <li>什么样的编码会同时含数字和大小写字母？——<strong>Base64</strong>（字符集是 <code>A-Za-z0-9+/</code>）。先按描述排除 Base16/Base32（它们的字符集不匹配）。</li>
+          <li>注意一个关键细节：<strong>长度是 19，不是 4 的倍数</strong>。Base64 的长度必须是 4 的倍数，所以原本末尾应该还有个 <code>=</code>（或被小明漏掉了）。这提示我们要还原出 20 个字符。</li>
+          <li>把"形近字母"换回数字，常见对应关系：
+            <table>
+              <thead><tr><th>小明写的</th><th>原本的</th><th>为什么像</th></tr></thead>
+              <tbody>
+                <tr><td><code>I</code></td><td><code>1</code></td><td>I 和 1 形近</td></tr>
+                <tr><td><code>Z</code></td><td><code>2</code></td><td>Z 和 2 形近</td></tr>
+                <tr><td><code>S</code></td><td><code>5</code></td><td>S 和 5 形近</td></tr>
+                <tr><td><code>G</code></td><td><code>9</code></td><td>G 和 9 形近</td></tr>
+                <tr><td><code>O</code></td><td><code>0</code></td><td>O 和 0 形近</td></tr>
+              </tbody>
+            </table>
+          </li>
+          <li>逐位还原（同时把小写字母恢复）：
+            <pre><code>小明抄的：  Q W I H B L G Z Z X J S X Z N V B Z W
+原本的：    Q W 1 h b l 9 2 Z X J 5 X 2 N v b 2 w =
+对应关系：  I←1   B←b   L←l   G←9   Z←2        S←5        Z←2  V←v  B←b  Z←2  W←w  (末尾补 =)</code></pre>
+            得到真正参与编码的字符串：
+            <pre><code>QW1hbl92ZXJ5X2Nvb2w=</code></pre>
+          </li>
+          <li>Base64 解码，得到明文 <code>Aman_very_cool</code>：
+            <pre><code>&gt;&gt;&gt; import base64
+&gt;&gt;&gt; base64.b64decode("QW1hbl92ZXJ5X2Nvb2w=").decode()
+'Aman_very_cool'</code></pre>
+          </li>
+          <li>按题目要求套上 flag 格式，得到 <code>flag{Aman_very_cool}</code>，提交通过。</li>
+          <li>（如果不想靠肉眼猜，也可以写脚本暴力：把每个字母的候选设为 <code>{原字母, 小写, 形近数字}</code>，然后按 Base64 每 4 个字符解出 3 个字节、<strong>只保留全是可打印 ASCII 的组合</strong>——这个约束能把搜索空间压得非常小。）</li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <h3>这道题的考点</h3>
+        <p>看描述的"错法"反推原始编码：数字被写成形近字母、字母全大写 → 说明<strong>原始字符串是"数字 + 大小写字母"混合</strong>，这正是 Base64 的字符集特征。再结合长度不是 4 的倍数，推断出末尾丢了 <code>=</code>。</p>
+
+        <h3>原理：为什么能靠"形近"还原</h3>
+        <ul>
+          <li>形近替换是人为错误里最常见的一类：<code>0/O</code>、<code>1/I/l</code>、<code>2/Z</code>、<code>5/S</code>、<code>8/B</code>、<code>6/G</code>、<code>9/G</code>——手抄和 OCR 都会犯这个错（这也是"验证码/邀请码"要避免这些字符的原因）。</li>
+          <li>Base64 的字符集是 <code>A-Z</code>(26) + <code>a-z</code>(26) + <code>0-9</code>(10) + <code>+/</code>(2) = 64 个；只要看到"看起来像 Base64 但长度/字符有点怪"，就可以考虑"形近替换 + 大小写丢失"这两种污染。</li>
+          <li>Base64 长度规则：编码后长度一定是 4 的倍数，不足时用 <code>=</code> 补齐（1 个 <code>=</code> 表示原文长度 ≡ 2 mod 3，2 个 <code>=</code> 表示 ≡ 1 mod 3）。19 个字符 → 补 1 个 <code>=</code> → 20 个字符 ✓ 原文 14 字节 ✓（<code>Aman_very_cool</code> 正好 14 个字符）。</li>
+        </ul>
+
+        <h3>可复用的思路（下次遇到同类题）</h3>
+        <ol>
+          <li>先看<strong>字符集</strong>判断 Base 种类：只有 <code>0-9a-f</code> → Base16；只有 <code>A-Z2-7</code> → Base32；含大小写+数字 → Base64/62/58；含大量符号 → Base85/91/92。</li>
+          <li>再看<strong>长度</strong>：Base64 要 4 的倍数、Base32 要 8 的倍数——不是就考虑"丢字符/补 padding"。</li>
+          <li>如果内容"像 Base64 但有几个字符不对劲"，就套形近表替换，然后用<strong>"解码结果必须是可打印文本"</strong>这个约束筛。</li>
+          <li>暴力脚本的通用写法：每个字符给出候选集合 → DFS 每 4 个字符解 3 字节 → 一旦某组字节不可打印就剪枝。这个技巧对 Base64/32 类分组编码都适用。</li>
+        </ol>
+
+        <h3>延伸知识</h3>
+        <ul>
+          <li>Base64 的 padding 规则和"去掉 padding 也能解"的宽容实现，是很多编码题的坑点。</li>
+          <li>相关变形题：把 Base64 的大小写打乱、把 <code>+</code> <code>/</code> 替换成 <code>-</code> <code>_</code>（URL-safe Base64）、把 0/1 换成 O/I 等。</li>
+          <li>真实世界里的对应场景：分享链接被聊天软件改写、验证码设计、以及 OCR 识别结果的后处理——都需要做形近字符的纠正。</li>
+        </ul>
+
+        <h3>防御视角</h3>
+        <p>从工程角度：生成需要人工抄写/转录的编码（邀请码、恢复码）时，应使用<strong>去混淆字符集</strong>（如 Crockford Base32 去掉 I/L/O/U），避免形近导致的错误；程序校验时也要考虑"用户把 0 打成 O"这类输入，做规范化后再比对。</p>
+
+        <h3>踩坑提示</h3>
+        <ul>
+          <li>别一上来就暴力全排列：先用"字符集 + 长度"把范围缩小到 Base64，再只对少数几个可疑字符做替换，会快很多。</li>
+          <li>长度不是 4 的倍数<b>不代表不是 Base64</b>——先试着补 <code>=</code>。</li>
+          <li>注意 <code>G</code> 既可能来自 <code>6</code> 也可能来自 <code>9</code>，<code>I/L</code> 都可能来自 <code>1</code>：候选表要给全，否则会漏解。</li>
+        </ul>
+
+        <h2>🎁 获得奖励</h2>
+        <p>2 金币 10 分数</p>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
