@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-黄道十二宫 · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-黄道十二宫</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+          <span class="tag">Crypto</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> 黄道十二官（黄道十二宫）</li>
+          <li><strong>题目平台：</strong> Bugku CTF（平台题）</li>
+          <li><strong>题目类型：</strong> Crypto / 古典密码（置换 + 同音替换）</li>
+          <li><strong>题目附件：</strong> <code>黄道十二官.jpg</code>（一张手写符号密信的图片）</li>
+          <li><strong>涉及工具：</strong> Python（做"跳马步"重排）、<strong>AZdecrypt</strong>（同音替换求解器）</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>打开图片：一张泛黄的纸上排满了古怪符号（几何图形、天文符号、特殊字符混在一起），一共十几行。
+            这种"符号网格 + 猎奇画风"的密信，一眼就能联想到美国著名的<strong>黄道十二宫杀手（Zodiac Killer）的 340 字符密信</strong>（简称 Z340）。</li>
+          <li>Z340 难在两件事叠在一起：
+            <ul>
+              <li><strong>置换（Transposition）</strong>：字符顺序被打乱，原文不是按行读的；</li>
+              <li><strong>同音替换（Homophonic substitution）</strong>：同一个字母可以对应好几个符号，专门用来破坏"统计哪个符号出现最多"的频率分析。</li>
+            </ul>
+            所以不能直接统计频率破解，必须<strong>先还原顺序，再做替换求解</strong>。
+          </li>
+          <li><strong>第一层：按"跳马步"重排。</strong>把密文字符按 <strong>15 列</strong>排成矩阵，然后按国际象棋里"马"的走法读取——<strong>向下走 1 行、向右走 2 列</strong>，越界就取模回绕：
+            <pre><code># 135 个字符（15×9）的跳马步重排
+str_data = "%%,@*&gt;@?==%88%5,@%#@@90-7$^=*@17,(&gt;()1@##-$40~,*6?#%#8#=75+1(*@*1%#&gt;,0@5)%?%*^=)&gt;=1%,+7&amp;#8681(+8*@@(,@@@#*=#$3*#%.#%%.3,*+7.7+@===+)61"
+W = 15
+for start in range(W):
+    c, r = start, 0
+    line = ""
+    for _ in range(len(str_data) // W):
+        line += str_data[r * W + c]
+        r += 1
+        c = (c + 2) % W
+    print(line)</code></pre>
+            跑完会得到一段"重排后的密文"——这一步就是把二维的视觉矩阵摊平成一维的逻辑字符串。
+          </li>
+          <li><strong>第二层：用 AZdecrypt 求解同音替换。</strong>把上一步得到的密文粘进
+            <a href="https://github.com/doranchak/azdecrypt" target="_blank" rel="noopener noreferrer">AZdecrypt</a>（GitHub 上开源的 Z340 求解工具），
+            运行 <strong>Solver</strong>，它会用双字符组/三字符组的统计概率（bigram / trigram）去"拼图"，自动算出最像英文的那套字母映射。</li>
+          <li>把解出的明文按题目格式整理，得到 flag：<code>flag{alphananke}</code>，提交通过。</li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <h3>这道题的考点</h3>
+        <p>古典密码里的"<strong>两层结构</strong>"：置换负责打乱顺序、替换负责隐藏字符身份。这两层叠起来，单靠肉眼看频率是解不出来的，必须借助工具 + 明确的解题顺序。</p>
+
+        <h3>原理：为什么要先重排、再求解</h3>
+        <ul>
+          <li><strong>置换（这里用的是"跳马步"）</strong>：把字符按 15 列摆放，再用 (行+1, 列+2) 的路径读取。这样相邻的字母在密文里会被拆得很远，<strong>破坏词组之间的关联</strong>——哪怕你猜出了符号对应的字母，按顺序读出来也还是一堆乱码。</li>
+          <li><strong>同音替换</strong>：普通替换里 E 永远对应同一个符号，数一下谁的频率最高就知道是 E。同音替换让 E 随机对应 %、*、#、@ 等多个符号，把单个符号的频率"摊平"，简单的频率分析立刻失效。</li>
+          <li><strong>为什么还是要用统计求解</strong>：虽然单字符频率被摊平了，但<strong>字母组合的概率特征还在</strong>——比如英文里 <code>TH</code>、<code>HE</code>、<code>ING</code> 这类组合出现得特别多。AZdecrypt 的做法是把"每种映射方案能拼出多少像英文的组合"变成一个得分，然后用爬山算法不断微调映射，直到分数最高（也就是最像英文）。</li>
+          <li>顺序很重要：<strong>重排没做对，替换求解器也救不了</strong>（它面对的是被彻底打乱的字符流，统计特征全丢了）。所以要先完成物理重排，再交给求解器。</li>
+        </ul>
+
+        <h3>可复用的思路（下次遇到同类题）</h3>
+        <ol>
+          <li><strong>先识别</strong>：看到几何/天文符号组成的密信网格 → 优先联想 Zodiac 系列（Z408 / Z340）、跳舞小人、银河字母等。</li>
+          <li><strong>再分层</strong>：问自己"这题有几层？"——置换层（顺序）和替换层（字符含义）要分开处理，别指望一步到位。</li>
+          <li><strong>层内用工具</strong>：置换层写十几行脚本就行（按列数 × 步长穷举：列宽 10~20、步长 1~3，看哪组能出可读文本）；替换层交给 AZdecrypt / 在线频率分析工具。</li>
+          <li><strong>用"是否像英文"做判据</strong>：解出来如果能拼出自然语言单词（而不是一堆随机字母），就说明顺序对了。</li>
+          <li>积累"密码工具库"：AZdecrypt（同音替换求解）、quipqiup（简单替换在线求解）、dcode.fr（各种古典密码）、CyberChef（编码转换）。</li>
+        </ol>
+
+        <h3>延伸知识</h3>
+        <ul>
+          <li><strong>Z340 的背景</strong>：黄道十二宫杀手在 1969 年寄给报社的三段密码之一（408、340、13 字符）。Z408 一周就被一对教师夫妇手工破了；<strong>Z340 直到 2020 年 12 月才被 David Oranchak 等人用自写程序 + AZdecrypt 破译</strong>，前后隔了 51 年。</li>
+          <li>Z340 的破解关键正是本题用到的那套思路：<strong>先发现"按行读不对"，尝试各种周期性的置换（19 行、15 列、对角/跳马等），再上同音替换求解器</strong>。</li>
+          <li>同音替换在历史上的用途：为了对抗频率分析，古人也用"一个字母对应多个符号"的办法；现代密码学用"混淆 + 扩散"达到同样目的，但靠的是数学难题而不是手工花招。</li>
+          <li>CTF 里这类题的标准流程可以总结成一句话：<strong>识别密码家族 → 还原顺序 → 求解替换 → 语言校验</strong>。</li>
+        </ul>
+
+        <h3>防御视角</h3>
+        <p>从密码学角度看，这类"置换 + 替换"的古典密码<strong>没有任何现代安全性</strong>：它不依赖密钥的数学困难性，只依赖统计特征的隐藏，而统计特征在足够长的文本面前必然暴露（这正是 Z340 最终被破的原因）。因此：真实系统的机密性必须靠现代算法（AES/RSA 等）+ 正确的密钥管理；同时也要明白"看起来乱码"绝不等于"安全"——<strong>可被统计的东西，最终都会被解开</strong>。</p>
+
+        <h3>踩坑提示</h3>
+        <ul>
+          <li><strong>别只做一层</strong>：重排后如果直接看，会发现还是一堆乱码——这不是解题失败，而是要接着做替换求解。</li>
+          <li><strong>列宽/步长要穷举</strong>：这类题的矩阵宽度和读取步长是"人为设定"的，15 列不一定通用；脚本里把列宽 10~20、步长 1~3 都试一遍更稳。</li>
+          <li><strong>越界取模别写错</strong>：行到边界回到顶行、列到边界回绕到左边（<code>c = (c + 2) % 15</code>），取模写错就会整段错位。</li>
+          <li><strong>不要指望手算</strong>：340 个字符的替换求解属于计算机的活儿，用 AZdecrypt 几分钟能跑完，手工做几天也做不完。</li>
+        </ul>
+
+        <h2>🎁 获得奖励</h2>
+        <p>2 金币 20 分数</p>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
