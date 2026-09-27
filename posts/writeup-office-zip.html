@@ -71,7 +71,11 @@ word/theme/theme1.xml
 # 或
 python -c "import re;print(re.findall(r'flag\{[^}]*\}', open('word/document.xml',encoding='utf-8').read()))"</code></pre>
           </li>
-          <li>在 <code>word/document.xml</code> 中找到了 flag：
+          <li>在 <code>word/document.xml</code> 里找到了 flag。有意思的是它被放在一个带 <code>&lt;w:vanish/&gt;</code> 标记的"run"里：
+            <pre><code>&lt;w:rPr&gt;&lt;w:vanish/&gt;&lt;/w:rPr&gt;&lt;w:t&gt;flag{F1@g}&lt;/w:t&gt;</code></pre>
+            <code>w:vanish</code> 就是 Word 的"<strong>隐藏文字</strong>"属性——在 Word 里默认根本不显示。所以这题其实是"双重眼见非实"：文件名骗你一次，隐藏文字再骗你一次。
+          </li>
+          <li>最终 flag：
             <pre><code>flag{F1@g}</code></pre>
             （注意用了 leet 写法：<code>F1@g</code> = <code>Fl@g</code>，<code>1</code> 代替 <code>l</code>，<code>@</code> 代替 <code>a</code>）
           </li>
@@ -118,6 +122,7 @@ grep -ra "flag" out                 # 递归搜关键字</code></pre>
           <li>Word 报"文件已损坏，无法打开"<strong>不代表文件没用</strong>——它只是不符合 Word 的解析要求，内容还在里面。</li>
           <li>搜 flag 时如果只搜 <code>flag{</code> 可能搜不到：XML 里文字常被 <code>&lt;w:t&gt;</code> 之类的标签分割，先去掉标签再搜更保险。</li>
           <li>文件名乱码是编码问题（GBK ↔ UTF-8），别以为是文件异常。</li>
+          <li>在 Word 里也可以直接看到隐藏文字：文件 → 选项 → 显示 → 勾选"隐藏文字"，或在"开始"里打开显示编辑标记；当然，直接解压看 XML 更快。</li>
           <li>这题 flag 是 <code>flag{F1@g}</code>，注意它是 leet 写法，别"顺手纠正"成 <code>flag{Fl@g}</code> 导致提交失败。</li>
         </ul>
 

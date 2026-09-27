@@ -85,10 +85,14 @@ if(!is_numeric($num))
           <li>用 curl 直接验证：
             <pre><code>curl "http://目标地址/?num=1%00"</code></pre>
             返回：
-            <pre><code>1 flag{4949567ccd1b99e18193f4c122d0f356}</code></pre>
+            <pre><code>1 flag{3397d364f8f96258f337b16454a07db4}</code></pre>
             （前面那个 <code>1</code> 是代码里的 <code>echo $num;</code> 回显）
           </li>
           <li>提交 flag，通过。</li>
+          <li><strong>⚠️ 这题的 flag 是"每个场景随机生成"的</strong>：每次点「启动场景」，靶机都会生成一个新的 flag。
+            我第一次解出来的是 <code>flag{4949567ccd1b99e18193f4c122d0f356}</code>，但准备提交时该场景已经过期，
+            平台提示"flag 不正确"；重新启动场景后拿到的是 <code>flag{3397d364f8f96258f337b16454a07db4}</code>。
+            <strong>正确做法：在场景有效期内、用当前场景返回的 flag 提交。</strong></li>
         </ol>
 
         <h2>📝 收获</h2>
@@ -128,6 +132,7 @@ if(!is_numeric($num))
 
         <h3>踩坑提示</h3>
         <ul>
+          <li><strong>遇到"动态 flag"题不要慌</strong>：靶机重启/场景过期后旧 flag 就失效了，提交前先重新访问一次靶机确认当前返回的 flag。</li>
           <li><code>%00</code> 必须用 URL 编码形式，不能直接敲空字节；浏览器地址栏可能自动处理掉，建议用 curl 或 Burp。</li>
           <li>这题用 <code>?num=1%20</code>（尾部空格）也能过，但要注意"<strong>前导</strong>空格"（<code>%201</code>）会被 <code>is_numeric</code> 当成合法数字，反而过不了——尾部合法、前导不合法，这个区别很容易混淆。</li>
           <li>页面同时回显了 <code>$num</code>（<code>echo $num;</code>），所以看到"<code>1 flag{...}</code>"这种输出不要以为是两个字段。</li>
