@@ -3,9 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>writeup-[+-&lt;&gt;] · Goldfish1232123 的博客</title>
+  <title>[+-&lt;&gt;] · Bugku Crypto Writeup · Goldfish1232123 的博客</title>
   <meta name="theme-color" content="#ffffff">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+
+  <meta name="description" content="Bugku CTF 平台 Crypto 题「[+-&lt;&gt;]」的 Writeup：记录一道通过识别 Brainfuck 语言，并利用在线解释器获取 flag 的题目，顺便整理了 Brainfuck 的 8 个核心指令。">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Goldfish1232123 的博客">
+  <meta property="og:title" content="[+-&lt;&gt;] · Bugku Crypto Writeup">
+  <meta property="og:description" content="Bugku CTF 平台 Crypto 题「[+-&lt;&gt;]」的 Writeup：记录一道通过识别 Brainfuck 语言，并利用在线解释器获取 flag 的题目，顺便整理了 Brainfuck 的 8 个核心指令。">
+  <meta property="og:url" content="https://goldfish1232123.github.io/posts/writeup-brainfuck.html">
+  <meta property="article:published_time" content="2026-09-18">
+  <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/theme-init.js"></script>
 </head>
@@ -30,13 +39,13 @@
       <a class="back-link" href="../index.html">← 返回首页</a>
 
       <header class="post-header">
-        <h1>writeup-[+-&lt;&gt;]</h1>
-        <div class="post-meta">
+        <h1>[+-&lt;&gt;]</h1>
+                <div class="post-meta">
           <time datetime="2026-09-18">2026-09-18</time>
           <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Crypto">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（[+-&lt;&gt;]）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Crypto">Crypto</span>
+          <span class="tag tag-type" data-type="Crypto">Crypto</span>
+          <span class="tag tag-platform">Bugku</span>
+          <span class="tag">CTF</span>
         </div>
       </header>
 
@@ -61,7 +70,7 @@
 <ul>
   <li>Brainfuck 只有 8 个指令，操作一个数据指针和一片内存单元：</li>
 </ul>
-<table>
+<div class="table-scroll"><table>
   <thead><tr><th>指令</th><th>含义</th></tr></thead>
   <tbody>
     <tr><td><code>&gt;</code></td><td>数据指针右移一格</td></tr>
@@ -73,7 +82,7 @@
     <tr><td><code>[</code></td><td>当前单元为 0 时，跳到匹配的 <code>]</code> 之后</td></tr>
     <tr><td><code>]</code></td><td>当前单元不为 0 时，跳回匹配的 <code>[</code> 之后</td></tr>
   </tbody>
-</table>
+</table></div>
 <ul>
   <li>关键点：<strong>其他所有字符都会被当作注释忽略</strong>。所以程序输出什么完全由这 8 个符号决定，把它原样交给解释器，运行结果就是明文。</li>
 </ul>
@@ -104,6 +113,10 @@
         <h2>🎁 获得奖励</h2>
         <p>1 金币 10 积分</p>
       </div>
+      <nav class="post-nav" aria-label="文章导航">
+        <a class="post-nav-item" href="writeup-core-values.html"><span class="post-nav-label">← 上一篇</span><span class="post-nav-title">富强民主</span></a>
+        <a class="post-nav-item" href="writeup-ok.html"><span class="post-nav-label">下一篇 →</span><span class="post-nav-title">ok</span></a>
+      </nav>
     </article>
   </main>
 
@@ -113,6 +126,7 @@
     </div>
   </footer>
 
+  <button id="to-top" class="to-top" type="button" aria-label="返回顶部" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
   <script src="../js/main.js"></script>
 </body>
 </html>

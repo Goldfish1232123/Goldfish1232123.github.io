@@ -229,3 +229,136 @@ a:hover { text-decoration: underline; }
   html.theme-ready body,
   .theme-toggle { transition: none; }
 }
+
+/* ================= 标签配色：题目类型 / 平台 ================= */
+.tag-type { font-weight: 600; }
+.tag-platform { color: var(--accent); border-color: rgba(232, 80, 58, .35); background: rgba(232, 80, 58, .07); }
+
+.tag-type[data-type="Web"]     { color: #1d4ed8; background: rgba(59, 130, 246, .10); border-color: rgba(59, 130, 246, .32); }
+.tag-type[data-type="Crypto"]  { color: #6d28d9; background: rgba(139, 92, 246, .10); border-color: rgba(139, 92, 246, .32); }
+.tag-type[data-type="Misc"]    { color: #047857; background: rgba(16, 185, 129, .10); border-color: rgba(16, 185, 129, .32); }
+.tag-type[data-type="Reverse"] { color: #b45309; background: rgba(245, 158, 11, .13); border-color: rgba(245, 158, 11, .34); }
+.tag-type[data-type="Pwn"]     { color: #be185d; background: rgba(236, 72, 153, .10); border-color: rgba(236, 72, 153, .32); }
+
+[data-theme="dark"] .tag-platform { border-color: rgba(255, 122, 92, .38); background: rgba(255, 122, 92, .10); }
+[data-theme="dark"] .tag-type[data-type="Web"]     { color: #93c5fd; background: rgba(96, 165, 250, .14); border-color: rgba(96, 165, 250, .36); }
+[data-theme="dark"] .tag-type[data-type="Crypto"]  { color: #c4b5fd; background: rgba(167, 139, 250, .14); border-color: rgba(167, 139, 250, .36); }
+[data-theme="dark"] .tag-type[data-type="Misc"]    { color: #6ee7b7; background: rgba(52, 211, 153, .13); border-color: rgba(52, 211, 153, .34); }
+[data-theme="dark"] .tag-type[data-type="Reverse"] { color: #fcd34d; background: rgba(251, 191, 36, .13); border-color: rgba(251, 191, 36, .34); }
+[data-theme="dark"] .tag-type[data-type="Pwn"]     { color: #f9a8d4; background: rgba(244, 114, 182, .14); border-color: rgba(244, 114, 182, .36); }
+
+/* ================= 首页：hero 统计 ================= */
+.hero-stats { margin: 10px 0 0; font-size: 14px; color: var(--text-soft); }
+.hero-stats b { color: var(--text); font-weight: 600; }
+
+/* ================= 首页：搜索 + 筛选 ================= */
+.filter-bar { margin: 18px 0 8px; }
+.filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; }
+.filter-label { min-width: 34px; font-size: 13px; color: var(--text-soft); }
+
+.chip {
+  padding: 3px 12px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text-soft);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color .18s, border-color .18s, background .18s;
+}
+.chip:hover { color: var(--accent); border-color: var(--accent); }
+.chip.is-active { color: #fff; background: var(--accent); border-color: var(--accent); }
+
+.filter-search-row { position: relative; display: flex; align-items: center; gap: 10px; margin: 14px 0 4px; }
+.filter-search-row > svg {
+  position: absolute; left: 12px; width: 15px; height: 15px;
+  color: var(--text-soft); pointer-events: none;
+}
+.filter-search-row input {
+  flex: 1; min-width: 0;
+  padding: 9px 12px 9px 36px;
+  font: inherit; font-size: 14px;
+  color: var(--text); background: var(--bg-soft);
+  border: 1px solid var(--border); border-radius: 10px;
+}
+.filter-search-row input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.filter-count { font-size: 13px; color: var(--text-soft); white-space: nowrap; }
+.filter-reset {
+  padding: 2px 6px; font: inherit; font-size: 13px; color: var(--accent);
+  background: none; border: none; cursor: pointer;
+}
+.filter-empty { margin: 28px 0; color: var(--text-soft); text-align: center; }
+
+/* 隐藏被筛掉的卡片；最后一张可见卡片不画分隔线 */
+.post-card[hidden] { display: none; }
+.post-card.is-last { border-bottom: none; }
+
+/* ================= 文章页：上一篇 / 下一篇 ================= */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 44px;
+  padding-top: 26px;
+  border-top: 1px solid var(--border);
+}
+.post-nav-item {
+  display: flex; flex-direction: column; gap: 4px;
+  min-width: 0; padding: 13px 16px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border); border-radius: var(--radius);
+}
+.post-nav-item:hover { border-color: var(--accent); text-decoration: none; }
+.post-nav-item.is-empty { opacity: .45; }
+.post-nav-item:last-child { text-align: right; }
+.post-nav-item:only-child { grid-column: 1 / -1; text-align: left; }
+.post-nav-label { font-size: 12px; color: var(--text-soft); }
+.post-nav-title { font-size: 15px; font-weight: 600; color: var(--text); overflow-wrap: anywhere; }
+
+/* ================= 返回顶部 ================= */
+.to-top {
+  position: fixed; right: 20px; bottom: 24px; z-index: 20;
+  display: grid; place-items: center;
+  width: 42px; height: 42px;
+  color: var(--text);
+  background: var(--bg-alpha);
+  border: 1px solid var(--border); border-radius: 50%;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: color .18s, border-color .18s;
+}
+.to-top svg { width: 18px; height: 18px; }
+.to-top:hover { color: var(--accent); border-color: var(--accent); }
+.to-top[hidden] { display: none; }
+
+/* ================= 文章页：表格 ================= */
+.post-body table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.post-body th, .post-body td { padding: 8px 10px; text-align: left; border: 1px solid var(--border); }
+.post-body thead th { background: var(--bg-soft); font-weight: 600; }
+.table-scroll { margin: 0 0 18px; overflow-x: auto; }
+.table-scroll table { margin: 0; }
+
+/* 宽屏时让代码块和表格比正文更宽一点（正文保持易读行宽） */
+@media (min-width: 900px) {
+  .post-body pre,
+  .post-body .table-scroll { width: calc(100% + 120px); margin-left: -60px; }
+}
+
+@media (max-width: 520px) {
+  .container { padding: 0 16px; }
+  .post-body pre { font-size: 12.5px; }
+  .post-body table { font-size: 13.5px; }
+  .post-body th, .post-body td { padding: 6px 8px; }
+  .post-nav { grid-template-columns: 1fr; }
+  .post-nav-item:last-child { text-align: left; }
+  .filter-bar { margin: 14px 0 6px; }
+  .filter-row { margin-bottom: 8px; gap: 6px; }
+  .filter-label { min-width: 30px; font-size: 12.5px; }
+  .chip { padding: 2px 10px; font-size: 12.5px; }
+  .filter-search-row { flex-wrap: wrap; margin-top: 10px; }
+  .filter-search-row input { padding: 8px 12px 8px 34px; font-size: 13.5px; }
+  .filter-count { order: 3; }
+  .to-top { right: 14px; bottom: 16px; }
+}

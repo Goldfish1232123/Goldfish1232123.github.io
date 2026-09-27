@@ -3,9 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>writeup-眼见非实 · Goldfish1232123 的博客</title>
+  <title>眼见非实 · Bugku Misc Writeup · Goldfish1232123 的博客</title>
   <meta name="theme-color" content="#ffffff">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+
+  <meta name="description" content="Bugku CTF 平台 Misc 题「眼见非实」的 Writeup：记录一道文件类型伪装题：叫 .docx 的文档其实是 zip，Word 打不开但解压后能拿到 word/document.xml，在 XML 里搜到 flag{F1@g}。">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Goldfish1232123 的博客">
+  <meta property="og:title" content="眼见非实 · Bugku Misc Writeup">
+  <meta property="og:description" content="Bugku CTF 平台 Misc 题「眼见非实」的 Writeup：记录一道文件类型伪装题：叫 .docx 的文档其实是 zip，Word 打不开但解压后能拿到 word/document.xml，在 XML 里搜到 flag{F1@g}。">
+  <meta property="og:url" content="https://goldfish1232123.github.io/posts/writeup-office-zip.html">
+  <meta property="article:published_time" content="2026-09-27">
+  <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/theme-init.js"></script>
 </head>
@@ -30,13 +39,13 @@
       <a class="back-link" href="../index.html">← 返回首页</a>
 
       <header class="post-header">
-        <h1>writeup-眼见非实</h1>
-        <div class="post-meta">
+        <h1>眼见非实</h1>
+                <div class="post-meta">
           <time datetime="2026-09-27">2026-09-27</time>
           <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Misc">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（眼见非实）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Misc">Misc</span>
+          <span class="tag tag-type" data-type="Misc">Misc</span>
+          <span class="tag tag-platform">Bugku</span>
+          <span class="tag">CTF</span>
         </div>
       </header>
 
@@ -131,6 +140,10 @@ grep -ra "flag" out                 # 递归搜关键字</code></pre>
         <p>1 金币 10 分数</p>
 
       </div>
+      <nav class="post-nav" aria-label="文章导航">
+        <a class="post-nav-item" href="writeup-php-weak-type.html"><span class="post-nav-label">← 上一篇</span><span class="post-nav-title">矛盾</span></a>
+        <a class="post-nav-item" href="writeup-telnet-pcap.html"><span class="post-nav-label">下一篇 →</span><span class="post-nav-title">telnet</span></a>
+      </nav>
     </article>
   </main>
 
@@ -140,6 +153,7 @@ grep -ra "flag" out                 # 递归搜关键字</code></pre>
     </div>
   </footer>
 
+  <button id="to-top" class="to-top" type="button" aria-label="返回顶部" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
   <script src="../js/main.js"></script>
 </body>
 </html>

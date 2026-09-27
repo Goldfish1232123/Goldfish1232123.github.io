@@ -33,395 +33,312 @@
   <main class="container" id="main">
     <section class="hero">
       <h1>你好，我是 <span class="accent">Goldfish1232123</span> 👋</h1>
-      <p class="hero-sub">这里记录我的学习笔记、项目总结和一些胡思乱想。</p>
+      <p class="hero-sub">记录网络安全学习笔记、CTF 解题思路和一些胡思乱想。</p>
+      <p class="hero-stats" id="hero-stats" hidden></p>
     </section>
 
     <section class="post-list">
-      <h2 class="section-title">最新文章</h2>
+      <h2 class="section-title">全部文章</h2>
 
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Crypto">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（黄道十二官）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Crypto">Crypto</span>
+      <div class="filter-bar" id="filter-bar" hidden>
+        <div class="filter-row" id="filter-platforms">
+          <span class="filter-label">平台</span>
         </div>
-        <h3><a href="posts/writeup-zodiac-cipher.html">writeup-黄道十二官</a></h3>
-        <p class="excerpt">记录一道 Zodiac 340 密信题：先用「跳马步」（下行 1 右移 2、取模回绕）把 15 列矩阵重排，再用 AZdecrypt 求解同音替换，得到 flag{alphananke}……</p>
-        <a class="read-more" href="posts/writeup-zodiac-cipher.html">阅读全文 →</a>
-      </article>
+        <div class="filter-row" id="filter-types">
+          <span class="filter-label">类型</span>
+        </div>
+        <div class="filter-search-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="filter-search" type="search" placeholder="搜索题目名、摘要或标签（按 / 聚焦）" autocomplete="off" aria-label="搜索文章">
+          <span class="filter-count" id="filter-count"></span>
+          <button type="button" class="filter-reset" id="filter-reset" hidden>清除筛选</button>
+        </div>
+      </div>
 
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Crypto">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（抄错的字符）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Crypto">Crypto</span>
-        </div>
-        <h3><a href="posts/writeup-typo-chars.html">writeup-抄错的字符</a></h3>
-        <p class="excerpt">记录一道编码识别题：小明把数字抄成形近字母并把字母全大写，从「形近替换 + 长度不是 4 的倍数」反推出 Base64 原文 QW1hbl92ZXJ5X2Nvb2w=，解出 flag{Aman_very_cool}……</p>
-        <a class="read-more" href="posts/writeup-typo-chars.html">阅读全文 →</a>
-      </article>
+      <p class="filter-empty" id="filter-empty" hidden>没有匹配的文章，换个关键词或点「全部」试试。</p>
 
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Web">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（备份是个好习惯）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Web">Web</span>
-        </div>
-        <h3><a href="posts/writeup-backup-source.html">writeup-备份是个好习惯</a></h3>
-        <p class="excerpt">记录一道 Web 题三连：index.php.bak 泄露源码 + md5 弱比较（0e / 数组绕过）+ str_replace 单次扫描绕过 key 过滤，payload 是 kkeyey1[]=a……</p>
-        <a class="read-more" href="posts/writeup-backup-source.html">阅读全文 →</a>
-      </article>
+      <div class="post-cards" id="post-cards">
+        <article class="post-card" data-platform="Bugku" data-type="Crypto">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Crypto">Crypto</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-zodiac-cipher.html">黄道十二官</a></h3>
+          <p class="excerpt">记录一道 Zodiac 340 密信题：先用「跳马步」（下行 1 右移 2、取模回绕）把 15 列矩阵重排，再用 AZdecrypt 求解同音替换，得到 flag{alphananke}……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Crypto">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Crypto">Crypto</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-typo-chars.html">抄错的字符</a></h3>
+          <p class="excerpt">记录一道编码识别题：小明把数字抄成形近字母并把字母全大写，从「形近替换 + 长度不是 4 的倍数」反推出 Base64 原文 QW1hbl92ZXJ5X2Nvb2w=，解出 flag{Aman_very_cool}……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Web">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Web">Web</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-backup-source.html">备份是个好习惯</a></h3>
+          <p class="excerpt">记录一道 Web 题三连：index.php.bak 泄露源码 + md5 弱比较（0e / 数组绕过）+ str_replace 单次扫描绕过 key 过滤，payload 是 kkeyey1[]=a……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Web">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Web">Web</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-php-weak-type.html">矛盾</a></h3>
+          <p class="excerpt">记录一道 PHP 弱类型题：既要 !is_numeric 为真、又要 ==1 为真，用 1%00 / 1%20 / 1a 三种 payload 都能绕过并拿到 flag……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Misc">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Misc">Misc</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-office-zip.html">眼见非实</a></h3>
+          <p class="excerpt">记录一道文件类型伪装题：叫 .docx 的文档其实是 zip，Word 打不开但解压后能拿到 word/document.xml，在 XML 里搜到 flag{F1@g}……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Misc">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Misc">Misc</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-telnet-pcap.html">telnet</a></h3>
+          <p class="excerpt">记录一道流量分析题：telnet 是明文协议，用 Wireshark 追踪 TCP 流就能直接看到登录时输入的 flag，附 Python 手工解析 pcap 的脚本……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Crypto">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Crypto">Crypto</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-short-ook.html">.!?</a></h3>
+          <p class="excerpt">记录一道 Short Ook 编码题：把 . ! ? 三种符号两两配对翻译成 Brainfuck 指令，自己写解释器运行得到 flag，含官方对照表与踩坑……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Misc">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Misc">Misc</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-linux-image.html">linux</a></h3>
+          <p class="excerpt">记录一道文件系统镜像取证题：14.7MB 的镜像里藏着 flag.txt 和回收站文件，用挂载 / grep -a 两种方式找出 key{...}……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Misc">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Misc">Misc</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-png-stego.html">隐写</a></h3>
+          <p class="excerpt">记录一道 PNG 隐写题：IHDR 高度被改且 CRC 被破坏导致图片打不开；修复宽高后发现 flag 藏在完全透明像素的颜色值里……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Reverse">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Reverse">Reverse</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-babyre.html">入门逆向</a></h3>
+          <p class="excerpt">记录一道 PE32 逆向入门题：程序只打印一行且 strings 搜不到 flag，最后在汇编里发现 19 条 mov 指令把 flag 逐字节写进栈……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Crypto">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Crypto">Crypto</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-pigpen.html">把猪困在猪圈里</a></h3>
+          <p class="excerpt">记录一道猪圈密码题：附件是 Base64 图片，图上的 17 个符号需要先把图片旋转 180° 再对照标准表，解出 thisispigpassword……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Crypto">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Crypto">Crypto</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-scattered-cipher.html">散乱的密文</a></h3>
+          <p class="excerpt">记录一道列（行）置换密码题：按纸条上的密钥 2 1 6 5 3 4 把密文每 6 个字符一组重排，还原出被打乱的 flag……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Crypto">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Crypto">Crypto</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-not-md5.html">这不是md5</a></h3>
+          <p class="excerpt">记录一道考察「编码 vs 哈希」区别的题：38 位十六进制字符串不是 MD5，而是可以直接翻译的十六进制编码……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Crypto">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Crypto">Crypto</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-base-family.html">贝斯家族</a></h3>
+          <p class="excerpt">记录一道 Base 家族编码题：密文里出现大量特殊符号，据此排除 Base64，最终用 Base91 解码得到 flag……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Misc">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Misc">Misc</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/writeup-core-values.html">富强民主</a></h3>
+          <p class="excerpt">记录一道社会主义核心价值观编码题：47 个价值观词里藏着十六进制，读懂 10/11 的转义设计后还原出 flag……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Crypto">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Crypto">Crypto</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-18">2026-09-18</time>
+          </div>
+          <h3><a href="posts/writeup-brainfuck.html">[+-&lt;&gt;]</a></h3>
+          <p class="excerpt">记录一道通过识别 Brainfuck 语言，并利用在线解释器获取 flag 的题目，顺便整理了 Brainfuck 的 8 个核心指令……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Crypto">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Crypto">Crypto</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-16">2026-09-16</time>
+          </div>
+          <h3><a href="posts/writeup-ok.html">ok</a></h3>
+          <p class="excerpt">记录一道通过识别 Ook 语言，并利用其与 Brainfuck 的转换关系，借助在线工具解码获取 flag 的题目……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Crypto">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Crypto">Crypto</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-15">2026-09-15</time>
+          </div>
+          <h3><a href="posts/writeup-smart-sheep.html">聪明的小羊</a></h3>
+          <p class="excerpt">记录一道通过分析题目描述与标题，识别出2栏栅栏密码并利用“对半切、奇偶交叉拼”破译 flag 的题目……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Crypto">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Crypto">Crypto</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-15">2026-09-15</time>
+          </div>
+          <h3><a href="posts/writeup-morse.html">/.-</a></h3>
+          <p class="excerpt">记录一道通过分析摩斯电码（点和划）并结合大小写转换获取 flag 的题目……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Misc">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Misc">Misc</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-15">2026-09-15</time>
+          </div>
+          <h3><a href="posts/writeup-simple-image.html">这是一张单纯的图片</a></h3>
+          <p class="excerpt">记录一道通过修改文件后缀查看网页源码，从乱码中提取 ASCII 码获取 flag 的题目……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Pwn">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Pwn">Pwn</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-13">2026-09-13</time>
+          </div>
+          <h3><a href="posts/writeup-ruishi.html">瑞士军刀</a></h3>
+          <p class="excerpt">记录一道通过连接靶机发送 Linux 命令，利用 Python 脚本读取目录并获取 flag 的题目，包含踩坑经验与新知识总结……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Web">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Web">Web</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-12">2026-09-12</time>
+          </div>
+          <h3><a href="posts/writeup-source.html">source</a></h3>
+          <p class="excerpt">记录一道通过 .git 源码泄露获取历史版本中 flag 的题目，利用 git-dumper 和 git reflog 还原开发者提交记录……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Web">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Web">Web</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-12">2026-09-12</time>
+          </div>
+          <h3><a href="posts/writeup-post.html">POST</a></h3>
+          <p class="excerpt">记录一道通过分析 HTTP 请求方式，在控制台利用 fetch 发送 POST 请求获取 flag 的题目……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Web">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Web">Web</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-12">2026-09-12</time>
+          </div>
+          <h3><a href="posts/writeup-get.html">GET</a></h3>
+          <p class="excerpt">记录一道通过分析 PHP 代码中的 $_GET 传参，构建 URL 获取 flag 的题目……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Web">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Web">Web</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-12">2026-09-12</time>
+          </div>
+          <h3><a href="posts/writeup-first-class.html">头等舱</a></h3>
+          <p class="excerpt">记录一道通过分析题目名称猜测是响应头泄露，并在抓包中找到 flag 的题目……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Web">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Web">Web</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-12">2026-09-12</time>
+          </div>
+          <h3><a href="posts/writeup-you-must-stop.html">你必须让他停下</a></h3>
+          <p class="excerpt">记录一道通过分析网页 JavaScript 刷新代码，利用拍屏方式获取 flag 的题目……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Web">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Web">Web</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-12">2026-09-12</time>
+          </div>
+          <h3><a href="posts/writeup-alert.html">alert</a></h3>
+          <p class="excerpt">记录一道通过 F12 发现可疑 ASCII 码并解码获取 flag 的题目……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Web">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Web">Web</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-12">2026-09-12</time>
+          </div>
+          <h3><a href="posts/writeup-calculator.html">计算器</a></h3>
+          <p class="excerpt">记录一道前端限制输入字符数的加法题，通过修改 maxlength 属性获取 flag……</p>
+        </article>
+        <article class="post-card" data-platform="Bugku" data-type="Web">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Web">Web</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-12">2026-09-12</time>
+          </div>
+          <h3><a href="posts/writeup-huaji.html">滑稽</a></h3>
+          <p class="excerpt">记录一次 CTF 题目“滑稽”的解题过程，通过 F12 开发者工具检查元素……</p>
+        </article>
+        <article class="post-card">
+          <div class="post-meta">
+            <time datetime="2026-09-11">2026-09-11</time>
+          </div>
+          <h3><a href="posts/task01.html">task01</a></h3>
+          <p class="excerpt">I'm here, ready for the cybersecurity world...</p>
+        </article>
 
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Web">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（矛盾）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Web">Web</span>
-        </div>
-        <h3><a href="posts/writeup-php-weak-type.html">writeup-矛盾</a></h3>
-        <p class="excerpt">记录一道 PHP 弱类型题：既要 !is_numeric 为真、又要 ==1 为真，用 1%00 / 1%20 / 1a 三种 payload 都能绕过并拿到 flag……</p>
-        <a class="read-more" href="posts/writeup-php-weak-type.html">阅读全文 →</a>
-      </article>
-
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Misc">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（眼见非实）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Misc">Misc</span>
-        </div>
-        <h3><a href="posts/writeup-office-zip.html">writeup-眼见非实</a></h3>
-        <p class="excerpt">记录一道文件类型伪装题：叫 .docx 的文档其实是 zip，Word 打不开但解压后能拿到 word/document.xml，在 XML 里搜到 flag{F1@g}……</p>
-        <a class="read-more" href="posts/writeup-office-zip.html">阅读全文 →</a>
-      </article>
-
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Misc">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（telnet）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Misc">Misc</span>
-        </div>
-        <h3><a href="posts/writeup-telnet-pcap.html">writeup-telnet</a></h3>
-        <p class="excerpt">记录一道流量分析题：telnet 是明文协议，用 Wireshark 追踪 TCP 流就能直接看到登录时输入的 flag，附 Python 手工解析 pcap 的脚本……</p>
-        <a class="read-more" href="posts/writeup-telnet-pcap.html">阅读全文 →</a>
-      </article>
-
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Crypto">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（.!?）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Crypto">Crypto</span>
-        </div>
-        <h3><a href="posts/writeup-short-ook.html">writeup-.!?</a></h3>
-        <p class="excerpt">记录一道 Short Ook 编码题：把 . ! ? 三种符号两两配对翻译成 Brainfuck 指令，自己写解释器运行得到 flag，含官方对照表与踩坑……</p>
-        <a class="read-more" href="posts/writeup-short-ook.html">阅读全文 →</a>
-      </article>
-
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Misc">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（linux）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Misc">Misc</span>
-        </div>
-        <h3><a href="posts/writeup-linux-image.html">writeup-linux</a></h3>
-        <p class="excerpt">记录一道文件系统镜像取证题：14.7MB 的镜像里藏着 flag.txt 和回收站文件，用挂载 / grep -a 两种方式找出 key{...}……</p>
-        <a class="read-more" href="posts/writeup-linux-image.html">阅读全文 →</a>
-      </article>
-
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Misc">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（隐写）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Misc">Misc</span>
-        </div>
-        <h3><a href="posts/writeup-png-stego.html">writeup-隐写</a></h3>
-        <p class="excerpt">记录一道 PNG 隐写题：IHDR 高度被改且 CRC 被破坏导致图片打不开；修复宽高后发现 flag 藏在完全透明像素的颜色值里……</p>
-        <a class="read-more" href="posts/writeup-png-stego.html">阅读全文 →</a>
-      </article>
-
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Reverse">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（入门逆向）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Reverse">Reverse</span>
-        </div>
-        <h3><a href="posts/writeup-babyre.html">writeup-入门逆向</a></h3>
-        <p class="excerpt">记录一道 PE32 逆向入门题：程序只打印一行且 strings 搜不到 flag，最后在汇编里发现 19 条 mov 指令把 flag 逐字节写进栈……</p>
-        <a class="read-more" href="posts/writeup-babyre.html">阅读全文 →</a>
-      </article>
-
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Crypto">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（把猪困在猪圈里）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Crypto">Crypto</span>
-        </div>
-        <h3><a href="posts/writeup-pigpen.html">writeup-把猪困在猪圈里</a></h3>
-        <p class="excerpt">记录一道猪圈密码题：附件是 Base64 图片，图上的 17 个符号需要先把图片旋转 180° 再对照标准表，解出 thisispigpassword……</p>
-        <a class="read-more" href="posts/writeup-pigpen.html">阅读全文 →</a>
-      </article>
-
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Crypto">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（散乱的密文）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Crypto">Crypto</span>
-        </div>
-        <h3><a href="posts/writeup-scattered-cipher.html">writeup-散乱的密文</a></h3>
-        <p class="excerpt">记录一道列（行）置换密码题：按纸条上的密钥 2 1 6 5 3 4 把密文每 6 个字符一组重排，还原出被打乱的 flag……</p>
-        <a class="read-more" href="posts/writeup-scattered-cipher.html">阅读全文 →</a>
-      </article>
-
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Crypto">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（这不是md5）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Crypto">Crypto</span>
-        </div>
-        <h3><a href="posts/writeup-not-md5.html">writeup-这不是md5</a></h3>
-        <p class="excerpt">记录一道考察「编码 vs 哈希」区别的题：38 位十六进制字符串不是 MD5，而是可以直接翻译的十六进制编码……</p>
-        <a class="read-more" href="posts/writeup-not-md5.html">阅读全文 →</a>
-      </article>
-
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Crypto">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（贝斯家族）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Crypto">Crypto</span>
-        </div>
-        <h3><a href="posts/writeup-base-family.html">writeup-贝斯家族</a></h3>
-        <p class="excerpt">记录一道 Base 家族编码题：密文里出现大量特殊符号，据此排除 Base64，最终用 Base91 解码得到 flag……</p>
-        <a class="read-more" href="posts/writeup-base-family.html">阅读全文 →</a>
-      </article>
-
-      <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-27">2026-09-27</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Misc">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（富强民主）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Misc">Misc</span>
-        </div>
-        <h3><a href="posts/writeup-core-values.html">writeup-富强民主</a></h3>
-        <p class="excerpt">记录一道社会主义核心价值观编码题：47 个价值观词里藏着十六进制，读懂 10/11 的转义设计后还原出 flag……</p>
-        <a class="read-more" href="posts/writeup-core-values.html">阅读全文 →</a>
-      </article>
-
-            <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-18">2026-09-18</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Crypto">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（[+-&lt;&gt;]）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Crypto">Crypto</span>
-        </div>
-        <h3><a href="posts/writeup-brainfuck.html">writeup-[+-&lt;&gt;]</a></h3>
-        <p class="excerpt">记录一道通过识别 Brainfuck 语言，并利用在线解释器获取 flag 的题目，顺便整理了 Brainfuck 的 8 个核心指令……</p>
-        <a class="read-more" href="posts/writeup-brainfuck.html">阅读全文 →</a>
-      </article>
-            <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-16">2026-09-16</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Crypto">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（ok）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Crypto">Crypto</span>
-        </div>
-        <h3><a href="posts/writeup-ok.html">writeup-ok</a></h3>
-        <p class="excerpt">记录一道通过识别 Ook 语言，并利用其与 Brainfuck 的转换关系，借助在线工具解码获取 flag 的题目……</p>
-        <a class="read-more" href="posts/writeup-ok.html">阅读全文 →</a>
-      </article>
-            <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-15">2026-09-15</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Crypto">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（聪明的小羊）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Crypto">Crypto</span>
-        </div>
-        <h3><a href="posts/writeup-smart-sheep.html">writeup-聪明的小羊</a></h3>
-        <p class="excerpt">记录一道通过分析题目描述与标题，识别出2栏栅栏密码并利用“对半切、奇偶交叉拼”破译 flag 的题目……</p>
-        <a class="read-more" href="posts/writeup-smart-sheep.html">阅读全文 →</a>
-      </article>
-            <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-15">2026-09-15</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Crypto">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（/.-）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Crypto">Crypto</span>
-        </div>
-        <h3><a href="posts/writeup-morse.html">writeup-/.-</a></h3>
-        <p class="excerpt">记录一道通过分析摩斯电码（点和划）并结合大小写转换获取 flag 的题目……</p>
-        <a class="read-more" href="posts/writeup-morse.html">阅读全文 →</a>
-      </article>
-            <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-15">2026-09-15</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Misc">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（这是一张单纯的图片）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Misc">Misc</span>
-        </div>
-        <h3><a href="posts/writeup-simple-image.html">writeup-这是一张单纯的图片</a></h3>
-        <p class="excerpt">记录一道通过修改文件后缀查看网页源码，从乱码中提取 ASCII 码获取 flag 的题目……</p>
-        <a class="read-more" href="posts/writeup-simple-image.html">阅读全文 →</a>
-      </article>
-            <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-13">2026-09-13</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Pwn">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（瑞士军刀）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Pwn">Pwn</span>
-        </div>
-        <h3><a href="posts/writeup-ruishi.html">writeup-瑞士军刀</a></h3>
-        <p class="excerpt">记录一道通过连接靶机发送 Linux 命令，利用 Python 脚本读取目录并获取 flag 的题目，包含踩坑经验与新知识总结……</p>
-        <a class="read-more" href="posts/writeup-ruishi.html">阅读全文 →</a>
-      </article>
-            <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-12">2026-09-12</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Web">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（source）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Web">Web</span>
-        </div>
-        <h3><a href="posts/writeup-source.html">writeup-source</a></h3>
-        <p class="excerpt">记录一道通过 .git 源码泄露获取历史版本中 flag 的题目，利用 git-dumper 和 git reflog 还原开发者提交记录……</p>
-        <a class="read-more" href="posts/writeup-source.html">阅读全文 →</a>
-      </article>
-            <article class="post-card">
-                <div class="post-meta">
-          <time datetime="2026-09-12">2026-09-12</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Web">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（POST）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Web">Web</span>
-        </div>
-        <h3><a href="posts/writeup-post.html">writeup-POST</a></h3>
-        <p class="excerpt">记录一道通过分析 HTTP 请求方式，在控制台利用 fetch 发送 POST 请求获取 flag 的题目……</p>
-        <a class="read-more" href="posts/writeup-post.html">阅读全文 →</a>
-      </article>
-            <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-12">2026-09-12</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Web">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（GET）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Web">Web</span>
-      
-        </div>
-        <h3><a href="posts/writeup-get.html">writeup-GET</a></h3>
-        <p class="excerpt">记录一道通过分析 PHP 代码中的 $_GET 传参，构建 URL 获取 flag 的题目……</p>
-        <a class="read-more" href="posts/writeup-get.html">阅读全文 →</a>
-      </article>
-            <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-12">2026-09-12</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Web">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（头等舱）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Web">Web</span>
-          
-        </div>
-        <h3><a href="posts/writeup-first-class.html">writeup-头等舱</a></h3>
-        <p class="excerpt">记录一道通过分析题目名称猜测是响应头泄露，并在抓包中找到 flag 的题目……</p>
-        <a class="read-more" href="posts/writeup-first-class.html">阅读全文 →</a>
-      </article>
-            <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-12">2026-09-12</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Web">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（你必须让他停下）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Web">Web</span>
-          
-        </div>
-        <h3><a href="posts/writeup-you-must-stop.html">writeup-你必须让他停下</a></h3>
-        <p class="excerpt">记录一道通过分析网页 JavaScript 刷新代码，利用拍屏方式获取 flag 的题目……</p>
-        <a class="read-more" href="posts/writeup-you-must-stop.html">阅读全文 →</a>
-      </article>
-            <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-12">2026-09-12</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Web">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（alert）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Web">Web</span>
-         
-        </div>
-        <h3><a href="posts/writeup-alert.html">writeup-alert</a></h3>
-        <p class="excerpt">记录一道通过 F12 发现可疑 ASCII 码并解码获取 flag 的题目……</p>
-        <a class="read-more" href="posts/writeup-alert.html">阅读全文 →</a>
-      </article>
-            <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-12">2026-09-12</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Web">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（计算器）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Web">Web</span>
-          
-        </div>
-        <h3><a href="posts/writeup-calculator.html">writeup-计算器</a></h3>
-        <p class="excerpt">记录一道前端限制输入字符数的加法题，通过修改 maxlength 属性获取 flag……</p>
-        <a class="read-more" href="posts/writeup-calculator.html">阅读全文 →</a>
-      </article>
-            <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-12">2026-09-12</time>
-          <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Web">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（滑稽）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Web">Web</span>
-          
-        </div>
-        <h3><a href="posts/writeup-huaji.html">writeup-滑稽</a></h3>
-        <p class="excerpt">记录一次 CTF 题目“滑稽”的解题过程，通过 F12 开发者工具检查元素……</p>
-        <a class="read-more" href="posts/writeup-huaji.html">阅读全文 →</a>
-      </article>
-            <article class="post-card">
-        <div class="post-meta">
-          <time datetime="2026-09-11">2026-09-11</time>
-          <span class="dot" aria-hidden="true">·</span>
-          
-        </div>
-        <h3><a href="posts/task01.html">task01</a></h3>
-        <p class="excerpt">I'm here, ready for the cybersecurity world...</p>
-        <a class="read-more" href="posts/task01.html">阅读全文 →</a>
-      </article>
-      
-
-      <!-- 以后写新的 CTF Writeup，就复制下面这个 article 卡片到最上面 -->
-      
+        <!-- 新文章模板：复制这张卡片，改成新内容（data-platform / data-type 决定筛选按钮，自动生效）
+        <article class="post-card" data-platform="Bugku" data-type="Misc">
+          <div class="post-meta">
+            <span class="tag tag-type" data-type="Misc">Misc</span>
+            <span class="tag tag-platform">Bugku</span>
+            <time datetime="2026-09-27">2026-09-27</time>
+          </div>
+          <h3><a href="posts/新文章.html">题目名</a></h3>
+          <p class="excerpt">一句话摘要……</p>
+        </article>
+        -->
+      </div>
     </section>
   </main>
 
@@ -431,6 +348,7 @@
     </div>
   </footer>
 
+  <script src="js/filter.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

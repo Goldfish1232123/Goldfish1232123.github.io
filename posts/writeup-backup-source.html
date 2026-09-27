@@ -3,9 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>writeup-备份是个好习惯 · Goldfish1232123 的博客</title>
+  <title>备份是个好习惯 · Bugku Web Writeup · Goldfish1232123 的博客</title>
   <meta name="theme-color" content="#ffffff">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+
+  <meta name="description" content="Bugku CTF 平台 Web 题「备份是个好习惯」的 Writeup：记录一道 Web 题三连：index.php.bak 泄露源码 + md5 弱比较（0e / 数组绕过）+ str_replace 单次扫描绕过 key 过滤，payload 是 kkeyey1[]=a。">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Goldfish1232123 的博客">
+  <meta property="og:title" content="备份是个好习惯 · Bugku Web Writeup">
+  <meta property="og:description" content="Bugku CTF 平台 Web 题「备份是个好习惯」的 Writeup：记录一道 Web 题三连：index.php.bak 泄露源码 + md5 弱比较（0e / 数组绕过）+ str_replace 单次扫描绕过 key 过滤，payload 是 kkeyey1[]=a。">
+  <meta property="og:url" content="https://goldfish1232123.github.io/posts/writeup-backup-source.html">
+  <meta property="article:published_time" content="2026-09-27">
+  <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/theme-init.js"></script>
 </head>
@@ -30,13 +39,13 @@
       <a class="back-link" href="../index.html">← 返回首页</a>
 
       <header class="post-header">
-        <h1>writeup-备份是个好习惯</h1>
-        <div class="post-meta">
+        <h1>备份是个好习惯</h1>
+                <div class="post-meta">
           <time datetime="2026-09-27">2026-09-27</time>
           <span class="dot" aria-hidden="true">·</span>
-          <span class="tag" title="CTF 题目类型：Web">CTF</span>
-          <span class="tag" title="Bugku CTF 题目（备份是个好习惯）">Bugku</span>
-          <span class="tag" title="Bugku 题目类型：Web">Web</span>
+          <span class="tag tag-type" data-type="Web">Web</span>
+          <span class="tag tag-platform">Bugku</span>
+          <span class="tag">CTF</span>
         </div>
       </header>
 
@@ -141,6 +150,10 @@ if (md5($key1) == md5($key2) &amp;&amp; $key1 !== $key2) {
         <p>2 金币 20 分数</p>
 
       </div>
+      <nav class="post-nav" aria-label="文章导航">
+        <a class="post-nav-item" href="writeup-typo-chars.html"><span class="post-nav-label">← 上一篇</span><span class="post-nav-title">抄错的字符</span></a>
+        <a class="post-nav-item" href="writeup-php-weak-type.html"><span class="post-nav-label">下一篇 →</span><span class="post-nav-title">矛盾</span></a>
+      </nav>
     </article>
   </main>
 
@@ -150,6 +163,7 @@ if (md5($key1) == md5($key2) &amp;&amp; $key1 !== $key2) {
     </div>
   </footer>
 
+  <button id="to-top" class="to-top" type="button" aria-label="返回顶部" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
   <script src="../js/main.js"></script>
 </body>
 </html>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Goldfish1232123 的博客</title>
+    <link>https://goldfish1232123.github.io/</link>
+    <description>网络安全学习笔记与 CTF Writeup 归档</description>
+    <language>zh-CN</language>
+    <atom:link href="https://goldfish1232123.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>黄道十二官 · Bugku Crypto Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-zodiac-cipher.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-zodiac-cipher.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Crypto</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Crypto 题「黄道十二官」的 Writeup：记录一道 Zodiac 340 密信题：先用「跳马步」（下行 1 右移 2、取模回绕）把 15 列矩阵重排，再用 AZdecrypt 求解同音替换，得到 flag{alphananke}。</description>
+    </item>
+    <item>
+      <title>抄错的字符 · Bugku Crypto Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-typo-chars.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-typo-chars.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Crypto</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Crypto 题「抄错的字符」的 Writeup：记录一道编码识别题：小明把数字抄成形近字母并把字母全大写，从「形近替换 + 长度不是 4 的倍数」反推出 Base64 原文 QW1hbl92ZXJ5X2Nvb2w=，解出 flag{Aman_very_cool}。</description>
+    </item>
+    <item>
+      <title>备份是个好习惯 · Bugku Web Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-backup-source.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-backup-source.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Web</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Web 题「备份是个好习惯」的 Writeup：记录一道 Web 题三连：index.php.bak 泄露源码 + md5 弱比较（0e / 数组绕过）+ str_replace 单次扫描绕过 key 过滤，payload 是 kkeyey1[]=a。</description>
+    </item>
+    <item>
+      <title>矛盾 · Bugku Web Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-php-weak-type.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-php-weak-type.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Web</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Web 题「矛盾」的 Writeup：记录一道 PHP 弱类型题：既要 !is_numeric 为真、又要 ==1 为真，用 1%00 / 1%20 / 1a 三种 payload 都能绕过并拿到 flag。</description>
+    </item>
+    <item>
+      <title>眼见非实 · Bugku Misc Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-office-zip.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-office-zip.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Misc</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Misc 题「眼见非实」的 Writeup：记录一道文件类型伪装题：叫 .docx 的文档其实是 zip，Word 打不开但解压后能拿到 word/document.xml，在 XML 里搜到 flag{F1@g}。</description>
+    </item>
+    <item>
+      <title>telnet · Bugku Misc Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-telnet-pcap.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-telnet-pcap.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Misc</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Misc 题「telnet」的 Writeup：记录一道流量分析题：telnet 是明文协议，用 Wireshark 追踪 TCP 流就能直接看到登录时输入的 flag，附 Python 手工解析 pcap 的脚本。</description>
+    </item>
+    <item>
+      <title>.!? · Bugku Crypto Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-short-ook.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-short-ook.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Crypto</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Crypto 题「.!?」的 Writeup：记录一道 Short Ook 编码题：把 . ! ? 三种符号两两配对翻译成 Brainfuck 指令，自己写解释器运行得到 flag，含官方对照表与踩坑。</description>
+    </item>
+    <item>
+      <title>linux · Bugku Misc Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-linux-image.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-linux-image.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Misc</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Misc 题「linux」的 Writeup：记录一道文件系统镜像取证题：14.7MB 的镜像里藏着 flag.txt 和回收站文件，用挂载 / grep -a 两种方式找出 key{...}。</description>
+    </item>
+    <item>
+      <title>隐写 · Bugku Misc Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-png-stego.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-png-stego.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Misc</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Misc 题「隐写」的 Writeup：记录一道 PNG 隐写题：IHDR 高度被改且 CRC 被破坏导致图片打不开；修复宽高后发现 flag 藏在完全透明像素的颜色值里。</description>
+    </item>
+    <item>
+      <title>入门逆向 · Bugku Reverse Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-babyre.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-babyre.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Reverse</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Reverse 题「入门逆向」的 Writeup：记录一道 PE32 逆向入门题：程序只打印一行且 strings 搜不到 flag，最后在汇编里发现 19 条 mov 指令把 flag 逐字节写进栈。</description>
+    </item>
+    <item>
+      <title>把猪困在猪圈里 · Bugku Crypto Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-pigpen.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-pigpen.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Crypto</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Crypto 题「把猪困在猪圈里」的 Writeup：记录一道猪圈密码题：附件是 Base64 图片，图上的 17 个符号需要先把图片旋转 180° 再对照标准表，解出 thisispigpassword。</description>
+    </item>
+    <item>
+      <title>散乱的密文 · Bugku Crypto Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-scattered-cipher.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-scattered-cipher.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Crypto</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Crypto 题「散乱的密文」的 Writeup：记录一道列（行）置换密码题：按纸条上的密钥 2 1 6 5 3 4 把密文每 6 个字符一组重排，还原出被打乱的 flag。</description>
+    </item>
+    <item>
+      <title>这不是md5 · Bugku Crypto Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-not-md5.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-not-md5.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Crypto</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Crypto 题「这不是md5」的 Writeup：记录一道考察「编码 vs 哈希」区别的题：38 位十六进制字符串不是 MD5，而是可以直接翻译的十六进制编码。</description>
+    </item>
+    <item>
+      <title>贝斯家族 · Bugku Crypto Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-base-family.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-base-family.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Crypto</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Crypto 题「贝斯家族」的 Writeup：记录一道 Base 家族编码题：密文里出现大量特殊符号，据此排除 Base64，最终用 Base91 解码得到 flag。</description>
+    </item>
+    <item>
+      <title>富强民主 · Bugku Misc Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-core-values.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-core-values.html</guid>
+      <pubDate>Sun, 27 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Misc</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Misc 题「富强民主」的 Writeup：记录一道社会主义核心价值观编码题：47 个价值观词里藏着十六进制，读懂 10/11 的转义设计后还原出 flag。</description>
+    </item>
+    <item>
+      <title>[+-&lt;&gt;] · Bugku Crypto Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-brainfuck.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-brainfuck.html</guid>
+      <pubDate>Fri, 18 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Crypto</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Crypto 题「[+-&lt;&gt;]」的 Writeup：记录一道通过识别 Brainfuck 语言，并利用在线解释器获取 flag 的题目，顺便整理了 Brainfuck 的 8 个核心指令。</description>
+    </item>
+    <item>
+      <title>ok · Bugku Crypto Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-ok.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-ok.html</guid>
+      <pubDate>Wed, 16 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Crypto</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Crypto 题「ok」的 Writeup：记录一道通过识别 Ook 语言，并利用其与 Brainfuck 的转换关系，借助在线工具解码获取 flag 的题目。</description>
+    </item>
+    <item>
+      <title>聪明的小羊 · Bugku Crypto Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-smart-sheep.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-smart-sheep.html</guid>
+      <pubDate>Tue, 15 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Crypto</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Crypto 题「聪明的小羊」的 Writeup：记录一道通过分析题目描述与标题，识别出2栏栅栏密码并利用“对半切、奇偶交叉拼”破译 flag 的题目。</description>
+    </item>
+    <item>
+      <title>/.- · Bugku Crypto Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-morse.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-morse.html</guid>
+      <pubDate>Tue, 15 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Crypto</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Crypto 题「/.-」的 Writeup：记录一道通过分析摩斯电码（点和划）并结合大小写转换获取 flag 的题目。</description>
+    </item>
+    <item>
+      <title>这是一张单纯的图片 · Bugku Misc Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-simple-image.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-simple-image.html</guid>
+      <pubDate>Tue, 15 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Misc</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Misc 题「这是一张单纯的图片」的 Writeup：记录一道通过修改文件后缀查看网页源码，从乱码中提取 ASCII 码获取 flag 的题目。</description>
+    </item>
+    <item>
+      <title>瑞士军刀 · Bugku Pwn Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-ruishi.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-ruishi.html</guid>
+      <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Pwn</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Pwn 题「瑞士军刀」的 Writeup：记录一道通过连接靶机发送 Linux 命令，利用 Python 脚本读取目录并获取 flag 的题目，包含踩坑经验与新知识总结。</description>
+    </item>
+    <item>
+      <title>source · Bugku Web Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-source.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-source.html</guid>
+      <pubDate>Sat, 12 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Web</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Web 题「source」的 Writeup：记录一道通过 .git 源码泄露获取历史版本中 flag 的题目，利用 git-dumper 和 git reflog 还原开发者提交记录。</description>
+    </item>
+    <item>
+      <title>POST · Bugku Web Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-post.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-post.html</guid>
+      <pubDate>Sat, 12 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Web</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Web 题「POST」的 Writeup：记录一道通过分析 HTTP 请求方式，在控制台利用 fetch 发送 POST 请求获取 flag 的题目。</description>
+    </item>
+    <item>
+      <title>GET · Bugku Web Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-get.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-get.html</guid>
+      <pubDate>Sat, 12 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Web</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Web 题「GET」的 Writeup：记录一道通过分析 PHP 代码中的 $_GET 传参，构建 URL 获取 flag 的题目。</description>
+    </item>
+    <item>
+      <title>头等舱 · Bugku Web Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-first-class.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-first-class.html</guid>
+      <pubDate>Sat, 12 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Web</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Web 题「头等舱」的 Writeup：记录一道通过分析题目名称猜测是响应头泄露，并在抓包中找到 flag 的题目。</description>
+    </item>
+    <item>
+      <title>你必须让他停下 · Bugku Web Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-you-must-stop.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-you-must-stop.html</guid>
+      <pubDate>Sat, 12 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Web</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Web 题「你必须让他停下」的 Writeup：记录一道通过分析网页 JavaScript 刷新代码，利用拍屏方式获取 flag 的题目。</description>
+    </item>
+    <item>
+      <title>alert · Bugku Web Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-alert.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-alert.html</guid>
+      <pubDate>Sat, 12 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Web</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Web 题「alert」的 Writeup：记录一道通过 F12 发现可疑 ASCII 码并解码获取 flag 的题目。</description>
+    </item>
+    <item>
+      <title>计算器 · Bugku Web Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-calculator.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-calculator.html</guid>
+      <pubDate>Sat, 12 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Web</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Web 题「计算器」的 Writeup：记录一道前端限制输入字符数的加法题，通过修改 maxlength 属性获取 flag。</description>
+    </item>
+    <item>
+      <title>滑稽 · Bugku Web Writeup</title>
+      <link>https://goldfish1232123.github.io/posts/writeup-huaji.html</link>
+      <guid isPermaLink="true">https://goldfish1232123.github.io/posts/writeup-huaji.html</guid>
+      <pubDate>Sat, 12 Sep 2026 00:00:00 +0800</pubDate>
+      <category>Web</category>
+      <category>Bugku</category>
+      <description>Bugku CTF 平台 Web 题「滑稽」的 Writeup：记录一次 CTF 题目“滑稽”的解题过程，通过 F12 开发者工具检查元素。</description>
+    </item>
+  </channel>
+</rss>

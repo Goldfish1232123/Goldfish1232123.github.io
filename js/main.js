@@ -70,4 +70,17 @@
       a.setAttribute('aria-current', 'page');
     }
   }
+
+  /* 返回顶部按钮：滚过一屏后出现 */
+  var toTop = document.getElementById('to-top');
+  if (toTop) {
+    var onScroll = function () { toTop.hidden = window.scrollY < 600; };
+    toTop.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      var first = document.querySelector('.back-link');
+      if (first && first.focus) { first.setAttribute('tabindex', '-1'); first.focus(); }
+    });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
 })();
