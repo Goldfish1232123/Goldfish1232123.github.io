@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>writeup-签到题 · Goldfish1232123 的博客</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 16 L1 9 L3 16 L1 23 Z' fill='%23d9442a'/%3E%3Cellipse cx='18' cy='16' rx='10' ry='8' fill='%23f0623d'/%3E%3Ccircle cx='23' cy='14' r='1.8' fill='%231a1a1a'/%3E%3Ccircle cx='23.7' cy='13.4' r='.7' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="../index.html" title="Goldfish1232123 的博客">🐟 Goldfish1232123 的博客</a>
+      <nav class="nav">
+        <a href="../index.html">首页</a>
+        <a href="../about.html">关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <article class="post">
+      <a class="back-link" href="../index.html">← 返回首页</a>
+
+      <header class="post-header">
+        <h1>writeup-签到题</h1>
+        <div class="post-meta">
+          <time datetime="2026-09-27">2026-09-27</time>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="tag">CTF</span>
+          <span class="tag">Misc</span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h2>📌 题目信息</h2>
+        <ul>
+          <li><strong>题目名：</strong> 签到题</li>
+          <li><strong>题目平台：</strong> Bugku CTF（MISC，10 分 / 2 金币，作者 harry）</li>
+          <li><strong>题目类型：</strong> MISC / 平台签到 + 信息获取（零技术门槛）</li>
+          <li><strong>题目描述：</strong> <code>关注微信公众号Bugku 即可获取flag</code>（题面里附了一张二维码图片）</li>
+          <li><strong>涉及工具：</strong> 微信（扫一扫 / 搜一搜），不用任何脚本</li>
+        </ul>
+
+        <h2>💥 解题过程</h2>
+        <ol>
+          <li>打开题目页面，描述只有一句话：<strong>关注微信公众号 Bugku 即可获取 flag</strong>，下面跟了一张二维码图片。看到这句话就知道这是一道<strong>送分题</strong>：它不考任何技术，考的是"知不知道去哪儿拿 flag"。</li>
+          <li>用微信扫题面里的那张二维码（保存图片后用「扫一扫 → 相册」），或者直接在微信里搜索公众号名字关注。两种方式都能到同一个官方公众号。</li>
+          <li>关注之后，公众号会给出<strong>签到/领 flag 的入口</strong>：可以点底部菜单，也可以给它发一个关键词（比如「签到」「flag」），机器人会自动回复一串 flag。这一步如果没反应，换一个关键词再发一次即可——自动回复通常是按关键词触发的。</li>
+          <li>把回复里的 flag <strong>原样复制</strong>，粘到题目页面的输入框里提交。这里有个很容易翻车的点：<strong>flag 是区分大小写的</strong>，题目评论区里就有人专门提醒"注意大小写"，说明不少人是因为手打时把大小写敲错才失败的。</li>
+          <li>提交成功，拿到这题的 10 分和 2 金币：
+            <pre><code>flag{BugKu-Sec-pwn!}</code></pre>
+          </li>
+          <li>一个小确认：如果你打开题目页面发现它<strong>已经显示「已解决」</strong>，说明这个 flag 之前已经提交过了，不用再交一遍（重复提交一般只会提示"已经提交过答案"）。签到题不像别的杂项题有附件可复现，做过就是做过了。</li>
+        </ol>
+
+        <h2>📝 收获</h2>
+        <h3>这道题的考点</h3>
+        <ul>
+          <li><strong>平台流程认知：</strong>签到题的作用是"把人引到官方渠道 + 给新用户送分数"，它考查的是你会不会看题目描述、会不会顺着描述给出的渠道去拿信息。</li>
+          <li><strong>flag 提交规范：</strong>flag 是对字符串做<strong>精确比对</strong>的，大小写、空格、括号形式都算内容。"原样复制粘贴"是最省事的正确做法。</li>
+          <li><strong>信息获取渠道：</strong>CTF 平台的活动、更新、临时通知经常只发在公众号/官方群里，知道去哪儿看公告本身就是一种能力。</li>
+        </ul>
+
+        <h3>原理：为什么会存在这种题</h3>
+        <ul>
+          <li>平台需要用最低成本把新用户引导到官方公众号或社群，于是设计一道 10 分的签到题，把"关注"这个动作直接写成题目要求——对平台是引流，对新手是"第一分"的正反馈。</li>
+          <li>校验逻辑很朴素：把用户输入和标准答案做字符串比较（去不去空格、区不区分大小写由平台实现决定）。所以"差一个字符"和"完全不对"对它来说是一样的失败，这也是为什么这类题最常见的失败原因不是不会做，而是<strong>抄错了</strong>。</li>
+          <li>题面里的二维码不是加密，只是把一段文本（这里是一个公众号链接）编码成了图案（QR Code）。QR 自带纠错码，所以二维码被压扁、缺一小块也常常能扫出来。</li>
+        </ul>
+
+        <h3>可复用的思路（下次遇到同类题）</h3>
+        <ol>
+          <li>题目描述指向<strong>平台外部渠道</strong>（公众号、官方群、论坛置顶帖、平台公告）时，直接去那条渠道找，不要在原地硬解——这类题的答案本来就写在题面指的方向上。</li>
+          <li>提交 flag <strong>一律复制粘贴</strong>，不要手打；粘贴后顺手看一眼首尾有没有多余空格。</li>
+          <li>flag 的<strong>格式不统一</strong>：<code>flag{}</code>、<code>bugku{}</code>、<code>key{}</code>、<code>BUGKU{}</code>、<code>KEY{}</code> 都见过。题目没明确要求时，按"正文里是什么就交什么"，别自己套壳。</li>
+          <li>遇到自动回复没反应时，先换关键词、再看公众号菜单；机器人一般都留了关键词说明。</li>
+        </ol>
+
+        <h3>延伸知识</h3>
+        <ul>
+          <li><strong>二维码的构成：</strong>定位角（三个大方块）+ 定时图案 + 数据区 + 纠错码。能"缺角还能扫"就是纠错码的功劳；而"二维码长得很像但其实指向钓鱼站"也是靠人眼分不清来实现的。</li>
+          <li><strong>扫码是攻击入口：</strong>现实里的二维码钓鱼（quishing）非常常见——把钓鱼链接编码成二维码贴在共享单车、停车缴费单、甚至替换商家收款码。扫码前后看清跳转的域名，比什么技巧都管用。</li>
+          <li><strong>平台规则：</strong>多数平台明确禁止"泄露 flag 及解题思路"。所以写 writeup 时要想一下哪些内容能公开（这里是一道公开赠送性质的签到题，flag 由官方公众号统一发放），哪些内容（比如需要保密的动态 flag）不该贴。</li>
+        </ul>
+
+        <h3>防御视角</h3>
+        <ul>
+          <li>从"扫码"这个动作出发：不扫来路不明的码；扫码后先看域名再决定要不要登录/支付；企业侧则可以对二维码入口做域名白名单、先预览后跳转。</li>
+          <li>从"校验区分大小写"出发：做自己的登录/兑换系统时，输入要先做规范化（去首尾空格、统一大小写策略），否则用户会莫名其妙地失败；但安全敏感的令牌又必须严格区分大小写——规范化只应该作用在"用户输入的人性化容错"上，不应该作用在密钥比对本身。</li>
+        </ul>
+
+        <h3>踩坑提示</h3>
+        <ul>
+          <li>"签到过"不等于"提交过"：先看一眼题目页的状态是不是<strong>已解决</strong>，已解决就不用再交。</li>
+          <li>flag 里同时有大写、小写和 <code>!</code>，最稳的做法是复制，而不是照着屏幕敲。</li>
+          <li>公众号没有回复时不要以为题目坏了：换个关键词，或者看菜单里的签到入口。</li>
+        </ul>
+
+        <h2>🎁 获得奖励</h2>
+        <p>2 金币 10 分数</p>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year">2026</span> Goldfish1232123 的博客 · 由 GitHub Pages 驱动</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
