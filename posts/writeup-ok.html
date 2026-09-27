@@ -61,16 +61,20 @@
   <li>Ook! 是 Brainfuck 的"换皮版"：它不发明新逻辑，只是把 Brainfuck 的 8 个符号<strong>换成</strong> <code>Ook.</code> / <code>Ook!</code> / <code>Ook?</code> 两两组合的写法。</li>
   <li>所以解码路径固定：<strong>Ook! → Brainfuck → 明文</strong>。两者的指令集是一一对应的：</li>
 </ul>
-<pre><code>Ook. Ook.  -&gt;  &gt;
-Ook! Ook!  -&gt;  &lt;
-Ook. Ook!  -&gt;  +
-Ook! Ook.  -&gt;  -
-Ook! Ook?  -&gt;  .
-Ook? Ook!  -&gt;  ,
-Ook. Ook?  -&gt;  [
-Ook? Ook.  -&gt;  ]</code></pre>
-<p>例如 <code>Ook. Ook. Ook. Ook. Ook! Ook? Ook! Ook!</code> 可以翻译成：</p>
-<pre><code>&gt;&gt;+</code></pre>
+<pre><code>Ook. Ook?  -&gt;  &gt;      （指针右移）
+Ook? Ook.  -&gt;  &lt;      （指针左移）
+Ook. Ook.  -&gt;  +      （当前单元 +1）
+Ook! Ook!  -&gt;  -      （当前单元 -1）
+Ook! Ook.  -&gt;  .      （输出当前单元）
+Ook. Ook!  -&gt;  ,      （读入一个字符）
+Ook! Ook?  -&gt;  [      （循环开始）
+Ook? Ook!  -&gt;  ]      （循环结束）</code></pre>
+<p><strong>⚠️ 注意对照表有两种流传版本</strong>：网上不少文章（包括一些 AI 生成的回答）用的是另一套映射，照着解会得到一堆乱码。判断方法很简单——<strong>用对表解出来的 Brainfuck 程序，开头通常是 <code>++++++++++[&gt;++++++++++&lt;]&gt;++.</code> 这种"先攒数字再输出"的经典结构</strong>；解出来全是空字符或乱码，就是表用错了。（我做「.!?」那道题时正好踩过这个坑，所以把这张表更正为官方版本。）</p>
+<p>例如 <code>Ook. Ook? Ook. Ook? Ook. Ook.</code> 按上表逐组翻译：</p>
+<pre><code>Ook. Ook?  -&gt;  &gt;
+Ook. Ook?  -&gt;  &gt;
+Ook. Ook.  -&gt;  +
+即：  &gt;&gt;+</code></pre>
 
 <h3>Brainfuck 的核心机制（翻译出来的东西怎么运行）</h3>
 <ul>
@@ -101,7 +105,8 @@ Ook? Ook.  -&gt;  ]</code></pre>
 
 <h3>踩坑提示</h3>
 <ul>
-  <li>复制 Ook 代码时注意别丢字符（一长串 <code>Ook.</code> 很容易在复制中折断）。</li>
+  <li><strong>对照表一定要用官方那份</strong>（见上文），网上流传的另一版会把 <code>Ook. Ook.</code> 当成 <code>&gt;</code>，用它会解出乱码。</li>
+          <li>复制 Ook 代码时注意别丢字符（一长串 <code>Ook.</code> 很容易在复制中折断）。</li>
   <li>别手动一个个翻译整段——用工具，把时间花在理解原理上。</li>
 </ul>
 
